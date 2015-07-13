@@ -1,0 +1,162 @@
+package com.language.parser;
+
+/* Import the class java_cup.runtime.*  */
+import java_cup.runtime.*;
+import java.util.*;
+
+import com.language.model.expression.*;
+
+/* Codigo del parser, se copia integramente a la clase final.
+    Agregamos el manejo de errores. */
+
+parser code {:
+
+    /* Reporte de error encontrado. */
+    public void report_error(String message, Object info) {
+        StringBuilder m = new StringBuilder("Error");
+        if (info instanceof java_cup.runtime.Symbol) {
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+            if (s.left >= 0) {
+                m.append(" in line "+(s.left+1));
+                if (s.right >= 0)
+                    m.append(", column "+(s.right+1));
+            }
+        }
+        m.append(" : "+message);
+        System.err.println(m);
+    }
+
+    /* Cuando se encuentra un error de donde el sistema no puede
+        recuperarse, se lanza un error fatal. Se despliega el mensaje
+        de error y se finaliza la ejecucion. */
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        System.exit(1);
+    }
+:};
+
+terminal OPAMAS, OPAMENOS, OPAPROD, OPAEXP,OPADIV,OPADIVENTERA,OPAMOD;
+terminal OPBABDAND, OPBABOR, OPBABXOR, OPBABNOT, OPBABSHIFTL, OPBABSHIFTR;
+terminal AND, OR, NOT, OPBIGUAL, OPBDISTINTO, OPBMENOR, OPBMAYOR, OPBMENORIGUAL, OPBMAYORIGUAL;
+terminal ASIG, LCORCHETE, RCORCHETE, LLLAVE, RLLAVE,LPAREN,RPAREN,PUNTOYCOMA ,PUNTO, COMA, DOSPUNTOS;
+terminal TRUE, FALSE;
+terminal IF, ELSE, WHILE, BREAK, CONTINUE, FOR,IN;
+terminal DEF,DATAFUNCION, FUNCION,RETURN,PRINT;
+terminal STRING, ID, INTEGER, LONG, FLOAT;
+terminal TAB, NOTAB;
+
+non terminal ArrayList<Sentencia> program, stmt_list;
+non terminal Expresion atom, literal, power, parenthesizedExpression;
+non terminal Expresion u_expr,m_expr,a_expr;
+non terminal Expresion shift_expr,and_expr,xor_expr,or_expr;
+non terminal Expresion or_test,and_test,not_test, comparison;
+non terminal Expresion expression;
+non terminal Sentencia simple_stmt;
+non terminal Variable assignment_stmt;
+
+precedence left OPAMAS, OPAMENOS;
+
+//Programa principal
+program ::= stmt_list:s {: RESULT = s; :};
+
+//Lista de sentencias
+stmt_list ::= stmt_list:sl simple_stmt:s {: sl.add(s); RESULT = sl; :}
+              | {: RESULT = new ArrayList<Sentencia>(); :}
+              ;
+
+//Sentencia simple
+simple_stmt ::= expression:e PUNTOYCOMA {: RESULT = e;:}
+                | expression:e {: RESULT = e;:}
+                | assignment_stmt:a PUNTOYCOMA {: RESULT = a;:}
+                | assignment_stmt:a {: RESULT = a;:}
+                ;
+
+//Asignacion
+assignment_stmt ::=   ID:i ASIG:a expression:e {: RESULT = new Variable(i,e); :}
+                   ;
+
+//Expresion (ACA PUEDE LLEGAR A IR EXPRESIONES SEPARADAS POR COMA ',' PARA TUPLAS LISTAS DICCIONARIOS LLAMADAS A PARAMETORS)
+expression_stmt ::=  expression:e {: RESULT = e; :}
+                    ;
+
+//Expresiones booleanas
+
+expression ::=    and_test:a {: RESULT = a; :}
+                | expression:or OR:o and_test:a {: RESULT = new Expresion("or",or,a,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+                ;
+
+and_test ::= not_test:n {: RESULT = n; :}
+            | and_test:a AND:o not_test:n {: RESULT = new Expresion("and",a,n,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+            ;
+
+not_test ::=    comparison:c {: RESULT = c; :}
+              | NOT:o not_test:n {: RESULT = new Expresion("not",n,TipoExpresion.UNARIA,oleft+1,oright+1); :}
+              ;
+
+comparison ::=   or_expr:o {: RESULT = o; :}
+              			 | comparison:c OPBMENOR:o or_expr:or {: RESULT = new Expresion("<",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+                     | comparison:c OPBMAYOR:o or_expr:or {: RESULT = new Expresion(">",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+                     | comparison:c OPBIGUAL:o or_expr:or {: RESULT = new Expresion("==",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+                     | comparison:c OPBMAYORIGUAL:o or_expr:or {: RESULT = new Expresion(">=",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+                     | comparison:c OPBMENORIGUAL:o or_expr:or {: RESULT = new Expresion("<=",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+                     | comparison:c OPBDISTINTO:o or_expr:or {: RESULT = new Expresion("!=",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+              			 ;
+
+//Expresiones arigmeticas bit a bit
+
+or_expr ::=   xor_expr:x {: RESULT = x; :}
+            | or_expr:or OPBABOR:o xor_expr:x {: RESULT = new Expresion("|",or,x,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+            ;
+
+xor_expr ::=  and_expr:a {: RESULT = a; :}
+              | xor_expr:x OPBABXOR:o and_expr:a  {: RESULT = new Expresion("^",x,a,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+              ;
+
+and_expr ::=    shift_expr:s {: RESULT = s; :}
+              | and_expr:a OPBABDAND:o shift_expr:s {: RESULT = new Expresion("&",a,s,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+              ;
+
+shift_expr ::=  a_expr:a {: RESULT = a; :}
+              | shift_expr:s OPBABSHIFTR:o a_expr:a {: RESULT = new Expresion(">>",s,a,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+              | shift_expr:s OPBABSHIFTL:o a_expr:a {: RESULT = new Expresion("<<",s,a,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+              ;
+
+//Expresiones aritmeticas
+
+a_expr ::=  m_expr:m {: RESULT = m; :}
+          | a_expr:a OPAMAS:o m_expr:m {: RESULT = new Expresion("+",a,m,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+          | a_expr:a OPAMENOS:o m_expr:m {: RESULT = new Expresion("-",a,m,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+          ;
+
+m_expr ::=    u_expr: u {: RESULT = u;:}
+            | m_expr:m OPAPROD:o u_expr:u {: RESULT = new Expresion("*",m,u,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+            | m_expr:m OPADIVENTERA:o u_expr:u {: RESULT = new Expresion("//",m,u,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+            | m_expr:m OPADIV:o u_expr:u {: RESULT = new Expresion("/",m,u,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+            | m_expr:m OPAMOD:o u_expr:u {: RESULT = new Expresion("%",m,u,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+            ;
+
+u_expr ::=    power:p {: RESULT = p; :}
+            | OPAMENOS:o u_expr:u {: RESULT = new Expresion("-",u,TipoExpresion.UNARIA,oleft+1,oright+1); :}
+            | OPAMAS:o u_expr:u {: RESULT = new Expresion("+",u,TipoExpresion.UNARIA,oleft+1,oright+1); :}
+            | OPBABNOT:o u_expr:u {: RESULT = new Expresion("~",u,TipoExpresion.UNARIA,oleft+1,oright+1); :}
+            ;
+
+power ::=   atom: a {: RESULT = a; :}
+          | atom:a OPAEXP:o u_expr:u {: RESULT = new Expresion("**",a,u,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+          ;
+
+atom ::= literal: l {: RESULT = l;:}
+        | parenthesizedExpression:pe {:RESULT = pe;:}
+        | ID: id  {:RESULT = new Expresion(id,TipoExpresion.ID,idleft+1,idright+1);:}
+        ;
+
+literal	::=   STRING: s {:RESULT = new Expresion(s,TipoExpresion.STRING,sleft+1,sright+1);:}
+          	| INTEGER: i {:RESULT = new Expresion(i,TipoExpresion.INTEGER,ileft+1,iright+1);:}
+          	| LONG: l {:RESULT = new Expresion(l,TipoExpresion.LONG,lleft+1,lright+1);:}
+          	| FLOAT: d {:RESULT = new Expresion(d,TipoExpresion.FLOAT,dleft+1,dright+1);:}
+            | TRUE: t {:RESULT = new Expresion(t,TipoExpresion.BOOL,tleft+1,tright+1);:}
+            | FALSE: f {:RESULT = new Expresion(f,TipoExpresion.BOOL,fleft+1,fright+1);:}
+          	;
+
+parenthesizedExpression ::= LPAREN expression:e RPAREN {:RESULT = e;:}
+                            ;

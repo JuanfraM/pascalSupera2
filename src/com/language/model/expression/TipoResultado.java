@@ -1,0 +1,10 @@
+package com.language.model.expression;
+
+public enum TipoResultado {
+	INTEGER,
+	STRING,
+	BOOL,
+	LONG, 
+	FLOAT,
+	LIST
+}
