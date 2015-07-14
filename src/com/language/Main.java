@@ -20,17 +20,18 @@ public class Main {
 			FileInputStream file = new FileInputStream("E:\\codigo.py");//args[0]);
 			ArrayList<Sentencia> Sentencias = ExpressionParser.parse(file);
 			
-			Scope Variables = new Scope();
+			Scope Scope = new Scope();
+			Map<String,Resultado> Funciones = new HashMap<String,Resultado>();
 			
 			for (Sentencia stmt : Sentencias) {
 				if (stmt instanceof Variable){
-					if (Variables.isVariableInScopeLocal(stmt.getValor())){
-						Variables.replaceScopeLocal(stmt.getValor(), stmt.ejecutar(Variables));
-						System.out.println("Asigno variable --- " + stmt.getValor().toString() + " = " + Variables.get(stmt.getValor().toString()));
+					if (Scope.isVariableInScopeLocal(stmt.getValor())){
+						Scope.replaceScopeLocal(stmt.getValor(), stmt.ejecutar(Scope));
+						System.out.println("Asigno variable --- " + stmt.getValor().toString() + " = " + Scope.get(stmt.getValor().toString()));
 					}
 					else {
-						Variables.addVariableScopeLocal(stmt.getValor(), stmt.ejecutar(Variables));
-						System.out.println("Declaro variable --- " + stmt.getValor().toString() + " = " + Variables.get(stmt.getValor().toString()));
+						Scope.addVariableScopeLocal(stmt.getValor(), stmt.ejecutar(Scope));
+						System.out.println("Declaro variable --- " + stmt.getValor().toString() + " = " + Scope.get(stmt.getValor().toString()));
 					}
 				}
 			}
