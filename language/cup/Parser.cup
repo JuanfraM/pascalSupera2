@@ -46,10 +46,11 @@ terminal STRING, ID, INTEGER, LONG, FLOAT;
 terminal TAB, NOTAB;
 
 non terminal ArrayList<Sentencia> program, stmt_list;
+non terminal ArrayList<Expresion> expression_list;
 non terminal Sentencia statment,simple_stmt,compound_stmt,if_stmt,for_stmt,while_stmt;
-non terminal Suite     suite;
-non terminal Variable  assignment_stmt,expression_list;
-non terminal Expresion list_display,atom, literal, power, parenthesizedExpression;
+non terminal ArrayList<Sentencia> suite, suite_statment;
+non terminal Variable  assignment_stmt;
+non terminal Expresion list_display,atom, literal, power, primary;
 non terminal Expresion u_expr,m_expr,a_expr;
 non terminal Expresion shift_expr,and_expr,xor_expr,or_expr;
 non terminal Expresion or_test,and_test,not_test, comparison;
@@ -59,26 +60,33 @@ non terminal Expresion print_stmt;
 precedence left OPAMAS, OPAMENOS;
 
 //Programa principal
-program ::= stmt_list:s {: RESULT = s; :};
-
-//Lista de sentencias
-stmt_list ::= stmt_list:sl statment:s {: sl.add(s); RESULT = sl; :}
-              | {: RESULT = new ArrayList<Sentencia>(); :}
-              ;
+program ::= program:p statment:s {: p.add(s); RESULT = p; :}
+            | {: RESULT = new ArrayList<Sentencia>(); :}
+            ;
 
 statment ::= simple_stmt:s {: RESULT = s; :}
             |compound_stmt:c {: RESULT = c; :}
             ;
 
 compound_stmt ::=   if_stmt:i {: RESULT = i; :}
-                  | while_stmt
+                  |while_stmt:w {: RESULT = w; :}
                   ;
 
-while_stmt ::= WHILE parenthesizedExpression:pe DOSPUNTOS suite:su {: RESULT = new While(pe,su.getSentencias());:}
+//originalmente era expression_list
+while_stmt ::= WHILE expression:pe DOSPUNTOS suite:su {: RESULT = new While(pe,su);:}
               ;
+//originalmente era expression_list
+if_stmt ::=   IF expression:pe DOSPUNTOS suite:su {: RESULT = new If(pe,su);:}
+            | IF expression:pe DOSPUNTOS suite:su ELSE DOSPUNTOS suite:su2 {: RESULT = new If(pe,su,su2);:}
+            ;
 
-if_stmt ::=   IF parenthesizedExpression:pe DOSPUNTOS suite:su {: RESULT = new If(pe,su.getSentencias());:}
-            | IF parenthesizedExpression:pe DOSPUNTOS suite:su ELSE DOSPUNTOS s VariableLista(en); :}
+suite ::= TAB suite_statment:s NOTAB {: RESULT = s; :}
+          ;
+
+suite_statment ::= suite_statment:ss statment:s {: ss.add(s); RESULT = ss; :}
+                    | {: RESULT = new ArrayList<Sentencia>(); :}
+                    ;
+
 //Sentencia simple
 simple_stmt ::=   expression_stmt:e {: RESULT = e;:}
                 | assignment_stmt:a PUNTOYCOMA {: RESULT = a;:}
@@ -87,24 +95,20 @@ simple_stmt ::=   expression_stmt:e {: RESULT = e;:}
                 | print_stmt:p {: RESULT = p;:}
                 ;
 
-//Asignacion //
+//Originalmente era expression_list
 assignment_stmt ::=   ID:i ASIG:a expression:e {: RESULT = new Variable(i,e); :}
-                    | ID:i ASIG:a enclosure:en {: RESULT = new Variable(i,en); :}
-                    | ID:i ASIG:a LPAREN expression:e COMA RPAREN, {: ArrayList<Expresion> a = new ArrayList<Expresion>();
-                                                                      a.add(e);
-                                                                      Expresion exp = new Expresion ("TUPLA", a, TipoExpresion.TUPLA, eleft+1, eright+1 );
-                                                                      RESULT = new Variable(i,a); :}
-                   ;
-
-//Expresion (ACA PUEDE LLEGAR A IR EXPRESIONES SEPARADAS POR COMA ',' PARA TUPLAS LISTAS DICCIONARIOS LLAMADAS A PARAMETORS)
-expression_stmt ::=  expression_list:el {: RESULT = el;:}
                     ;
 
-//Expresiones booleanas
-
-expression ::=    and_test:a {: RESULT = a; :}
-                | expression:or OR:o and_test:a {: RESULT = new Expresion("or",or,a,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+//Originalmente era expression_list
+expression_stmt ::=  expression:el {: RESULT = el;:}
                 ;
+
+expression ::= or_test:o {: RESULT = o; :}
+              ;
+
+or_test ::= and_test:a {: RESULT = a; :}
+            | or_test:or OR:o and_test:a {: RESULT = new Expresion("or",or,a,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+            ;
 
 and_test ::= not_test:n {: RESULT = n; :}
             | and_test:a AND:o not_test:n {: RESULT = new Expresion("and",a,n,TipoExpresion.BINARIA,oleft+1,oright+1); :}
@@ -117,10 +121,7 @@ not_test ::=    comparison:c {: RESULT = c; :}
 comparison ::=   or_expr:o {: RESULT = o; :}
               			 | comparison:c OPBMENOR:o or_expr:or {: RESULT = new Expresion("<",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
                      | comparison:c OPBMAYOR:o or_expr:or {: RESULT = new Expresion(">",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
-                     | comparison:c OPBIGUAL:o or_expr:or {: RESULT = new Expresion("==",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
-                     | comparison:c OPBMAYORIGUAL:o or_expr:or {: RESULT = new Expresion(">=",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
-                     | comparison:c OPBMENORIGUAL:o or_expr:or {: RESULT = new Expresion("<=",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
-                     | comparison:c OPBDISTINTO:o or_expr:or {: RESULT = new Expresion("!=",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+                     | comparison:c OPBIGUAL:o or_expr:or {: RESULT = new Expresion("!=",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
               			 ;
 
 //Expresiones arigmeticas bit a bit
@@ -162,12 +163,15 @@ u_expr ::=    power:p {: RESULT = p; :}
             | OPBABNOT:o u_expr:u {: RESULT = new Expresion("~",u,TipoExpresion.UNARIA,oleft+1,oright+1); :}
             ;
 
-power ::=   atom: a {: RESULT = a; :}
-          | atom:a OPAEXP:o u_expr:u {: RESULT = new Expresion("**",a,u,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+power ::=   primary: p {: RESULT = p; :}
+          | primary:p OPAEXP:o u_expr:u {: RESULT = new Expresion("**",p,u,TipoExpresion.BINARIA,oleft+1,oright+1); :}
           ;
 
+primary ::= atom:a {: RESULT = a; :}
+            ;
+
 atom ::= literal:l {: RESULT = l;:}
-        | parenthesizedExpression:pe {:RESULT = pe;:}
+        | enclosure:en {:RESULT = en;:}
         | ID: id  {:RESULT = new Expresion(id,TipoExpresion.ID,idleft+1,idright+1);:}
         ;
 
@@ -176,17 +180,15 @@ enclosure ::=   list_display:l {:RESULT = l;:}
               ;
 
 parenth_form ::= LPAREN expression_list:el RPAREN {:RESULT = new Expresion("TUPLA",el,TipoExpresion.TUPLA,elleft+1,elright+1);:}
-                | LPAREN:l  RPAREN {: ArrayList<Expression>() a = new ArrayList<Expression>()
-                                      RESULT = new Expresion("TUPLA",a,TipoExpresion.TUPLA,lleft+1,lright+1); :}
-
-list_display ::= LCORCHETE expression_list:el RCORCHETE {:RESULT = new Expresion("LIST",el,TipoExpresion.LIST,elleft+1,elright+1);:}
-                | LCORCHETE:l RCORCHETE {: ArrayList<Expression>() a = new ArrayList<Expression>()
-                                          RESULT = new Expresion("LISTA",a,TipoExpresion.LISTA,lleft+1,lright+1); :}
                 ;
 
-expression_list ::=   expression:e {: RESULT = e; :}
-                    | expression:e COMA expression_list:el {: el.add(e); RESULT = el;  :}
-                    | {: RESULT = new ArrayList<Expression>(); :}
+list_display ::= LCORCHETE expression_list:el RCORCHETE {:RESULT = new Expresion("LIST",el,TipoExpresion.LIST,elleft+1,elright+1);:}
+                ;
+
+expression_list ::=   expression:e {: ArrayList<Expresion> a = new ArrayList<Expresion>();
+                                    a.add(e) ;
+                                    RESULT = a;:}
+                    | expression_list:el COMA expression:e {: el.add(e); RESULT = el;  :}
                     ;
 
 literal	::=   STRING: s {:RESULT = new Expresion(s,TipoExpresion.STRING,sleft+1,sright+1);:}
@@ -196,9 +198,6 @@ literal	::=   STRING: s {:RESULT = new Expresion(s,TipoExpresion.STRING,sleft+1,
             | TRUE: t {:RESULT = new Expresion(t,TipoExpresion.BOOL,tleft+1,tright+1);:}
             | FALSE: f {:RESULT = new Expresion(f,TipoExpresion.BOOL,fleft+1,fright+1);:}
           	;
-
-parenthesizedExpression ::= LPAREN expression:e RPAREN {:RESULT = e;:}
-                            ;
 
 print_stmt ::= PRINT expression:e {:RESULT = new Expresion("print",e,TipoExpresion.FUNCTION_PREDEF,eleft+1,eright+1);:}
                 ;
