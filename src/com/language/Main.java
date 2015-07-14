@@ -20,16 +20,16 @@ public class Main {
 			FileInputStream file = new FileInputStream("E:\\codigo.py");//args[0]);
 			ArrayList<Sentencia> Sentencias = ExpressionParser.parse(file);
 			
-			Map<String,Resultado> Variables = new HashMap<String,Resultado>();
+			Scope Variables = new Scope();
 			
 			for (Sentencia stmt : Sentencias) {
 				if (stmt instanceof Variable){
-					if (Variables.containsKey(stmt.getValor())){
-						Variables.replace(stmt.getValor(), stmt.ejecutar(Variables));
+					if (Variables.isVariableInScopeLocal(stmt.getValor())){
+						Variables.replaceScopeLocal(stmt.getValor(), stmt.ejecutar(Variables));
 						System.out.println("Asigno variable --- " + stmt.getValor().toString() + " = " + Variables.get(stmt.getValor().toString()));
 					}
 					else {
-						Variables.put(stmt.getValor(), stmt.ejecutar(Variables));
+						Variables.addVariableScopeLocal(stmt.getValor(), stmt.ejecutar(Variables));
 						System.out.println("Declaro variable --- " + stmt.getValor().toString() + " = " + Variables.get(stmt.getValor().toString()));
 					}
 				}
@@ -38,6 +38,9 @@ public class Main {
 		} 
 		catch (FileNotFoundException e) {
 			System.out.println("No se encontro el archivo :" + args[0]);
+		}
+		catch (Exception e) {
+			System.out.println("Error inesperado: " + e.toString());
 		}
 	}
 	

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.language.Scope;
 import com.language.exceptions.ParsingException;
 
 public class Expresion extends Sentencia {
@@ -50,7 +51,7 @@ public class Expresion extends Sentencia {
 		}
 	}
 
-	public Resultado ejecutar(Map<String,Resultado> variables){
+	public Resultado ejecutar(Scope variables){
 		
 		Resultado ret = null;
 		

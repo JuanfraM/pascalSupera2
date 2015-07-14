@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.language.Scope;
+
 public class Variable extends Sentencia {
 
 	private Object id; 
@@ -14,7 +16,7 @@ public class Variable extends Sentencia {
 		this.argument = argument;	
 	}
 	
-	public Resultado ejecutar (Map<String,Resultado> variables){
+	public Resultado ejecutar (Scope variables){
 		return this.argument.ejecutar(variables);
 	}
 	
