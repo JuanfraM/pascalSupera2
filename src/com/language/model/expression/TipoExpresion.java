@@ -10,5 +10,6 @@ public enum TipoExpresion {
 	BOOL,
 	ID,
 	LIST,
-	TUPLA
+	TUPLA,
+	NONE
 }

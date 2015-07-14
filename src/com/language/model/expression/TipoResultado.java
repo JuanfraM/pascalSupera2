@@ -7,5 +7,6 @@ public enum TipoResultado {
 	LONG, 
 	FLOAT,
 	LIST,
-	TUPLA
+	TUPLA,
+	NONE
 }

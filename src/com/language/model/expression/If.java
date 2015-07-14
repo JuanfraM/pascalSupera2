@@ -13,13 +13,13 @@ public class If extends Sentencia{
 	private Expresion condicion;
 	private ArrayList<Sentencia> sentencias;
 	private ArrayList<Sentencia> sentenciasElse;
-	private boolean tieneElse;
+	private boolean hayElse;
 	
 	public If(Expresion condicion, ArrayList<Sentencia> sentencias) {
 		super();
 		this.condicion = condicion;
 		this.sentencias = sentencias;
-		this.tieneElse =false;
+		this.hayElse =false;
 	}
 	
 	public If(Expresion condicion, ArrayList<Sentencia> sentencias, ArrayList<Sentencia> sentenciasElse ){
@@ -27,7 +27,7 @@ public class If extends Sentencia{
 		this.condicion = condicion;
 		this.sentencias = sentencias;
 		this.sentenciasElse = sentenciasElse;
-		this.tieneElse = true;
+		this.hayElse = true;
 	}
 
 	public Expresion getCondicion() {
@@ -56,7 +56,7 @@ public class If extends Sentencia{
 		
 		res = "If:" + "condicion: " + this.condicion.toString() +  " :suite: "+ suite + "\n";
 	
-		if(this.tieneElse){
+		if(this.hayElse){
 			String suite_else = "";
 			for(Sentencia s : this.sentenciasElse)
 				suite_else = suite_else + s.toString();
@@ -76,11 +76,11 @@ public class If extends Sentencia{
 			if(Boolean.parseBoolean(res.getValor())){
 				suite = this.sentencias;
 				
-			/** Si la condicion es FALSA y tiene ELSE */
-			}else if(this.tieneElse){
+			/** Si la condicion es FALSA y hay ELSE */
+			}else if(this.hayElse){
 				suite = this.sentenciasElse;
 				
-			/** Si la condicion es FALSA y NO tiene ELSE*/
+			/** Si la condicion es FALSA y NO hay ELSE*/
 			}else{
 				ejecuta = false;
 			}
