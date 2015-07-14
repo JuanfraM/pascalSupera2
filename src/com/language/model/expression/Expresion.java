@@ -81,13 +81,18 @@ public class Expresion extends Sentencia {
 			}
 		}
 		
-		else if(this.tipo == TipoExpresion.LIST){
+		else if(this.tipo == TipoExpresion.LIST || this.tipo == TipoExpresion.TUPLA){
 			ArrayList<Resultado> arg = new ArrayList<Resultado>();
 			for (Expresion a : this.arguments){
 				arg.add(a.ejecutar(variables));
 			}
-			ret = new Resultado(arg, TipoResultado.LIST);
+			if (this.tipo == TipoExpresion.LIST)
+				ret = new Resultado(arg, TipoResultado.LIST);
+			else 
+				ret = new Resultado(arg, TipoResultado.TUPLA);
 		}
+		
+		//UNARIAS
 		
 		else if (this.tipo == TipoExpresion.UNARIA){
 			Resultado arg = this.arguments.get(0).ejecutar(variables);
@@ -125,9 +130,14 @@ public class Expresion extends Sentencia {
 			}
 			
 		}
+		
+		//BINARIAS
+		
 		else if (this.tipo == TipoExpresion.BINARIA){
 			Resultado arg1 = this.arguments.get(0).ejecutar(variables);
 			Resultado arg2 = this.arguments.get(1).ejecutar(variables);
+			
+			//BOOLEANAS
 			
 			if (this.value.toString() == "or"){
 				if (arg1.getTipo() == TipoResultado.BOOL && arg2.getTipo() == TipoResultado.BOOL){
@@ -145,6 +155,9 @@ public class Expresion extends Sentencia {
 				else
 					throw new ParsingException("Tipo de datos no valido linea: " + this.linea + " columna: " + this.col );
 			}
+			
+			//COMPARACION
+			
 			else if (this.value.toString() == "<"){
 				if (arg1.getTipo() == TipoResultado.INTEGER && arg2.getTipo() == TipoResultado.INTEGER){
 					Boolean b = Integer.parseInt(arg1.getValor()) < Integer.parseInt(arg2.getValor());
@@ -401,6 +414,9 @@ public class Expresion extends Sentencia {
 				else
 					throw new ParsingException("Tipo de datos no valido linea: " + this.linea + " columna: " + this.col );
 			}
+			
+			//BIT A BIT
+			
 			else if (this.value.toString() == "|"){
 				if (arg1.getTipo() == TipoResultado.INTEGER && arg2.getTipo() == TipoResultado.INTEGER){
 					Integer b = Integer.parseInt(arg1.getValor()) | Integer.parseInt(arg2.getValor());
@@ -501,6 +517,9 @@ public class Expresion extends Sentencia {
 				else
 					throw new ParsingException("Tipo de datos no valido linea: " + this.linea + " columna: " + this.col );
 			}
+			
+			//ARITMETICAS
+			
 			else if (this.value.toString() == "+"){
 				if (arg1.getTipo() == TipoResultado.INTEGER && arg2.getTipo() == TipoResultado.INTEGER){
 					Integer b = Integer.parseInt(arg1.getValor()) + Integer.parseInt(arg2.getValor());

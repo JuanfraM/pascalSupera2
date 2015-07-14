@@ -9,5 +9,6 @@ public enum TipoExpresion {
 	FLOAT,
 	BOOL,
 	ID,
-	LIST
+	LIST,
+	TUPLA
 }

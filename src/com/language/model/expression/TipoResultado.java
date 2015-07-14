@@ -6,5 +6,6 @@ public enum TipoResultado {
 	BOOL,
 	LONG, 
 	FLOAT,
-	LIST
+	LIST,
+	TUPLA
 }

@@ -31,6 +31,11 @@ import com.language.model.expression.*;
 	private Symbol symbol(int type, Object value) {
 		return new Symbol(type, yyline, yycolumn, value);
 	}
+	
+	private Symbol noTab (){
+		System.out.println("NOTAB"); 
+		return symbol(sym.NOTAB);
+	}
 %}
 
 %eofval{
@@ -153,8 +158,9 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 												if (tabs < tabsAnterior) {
 													int contador = tabsAnterior - tabs;
 													tabsAnterior = tabs;
-													for (int i = 0; i < contador; i++)
-														System.out.println("NOTAB"); return symbol(sym.NOTAB);
+													for (int i = 0; i < contador; i++){
+														noTab();
+													}
 												}
 												else if (tabs > tabsAnterior){
 													tabsAnterior = tabs;
@@ -258,8 +264,9 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 										if (tabs < tabsAnterior) {
 											int contador = tabsAnterior - tabs;
 											tabsAnterior = tabs;
-											for (int i = 0; i < contador; i++)
-												System.out.println("NOTAB"); return symbol(sym.NOTAB);
+											for (int i = 0; i < contador; i++){
+												noTab();
+											}
 										}
 										else if (tabs > tabsAnterior){
 											tabsAnterior = tabs;
