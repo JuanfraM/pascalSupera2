@@ -46,13 +46,15 @@ terminal STRING, ID, INTEGER, LONG, FLOAT;
 terminal TAB, NOTAB;
 
 non terminal ArrayList<Sentencia> program, stmt_list;
-non terminal Expresion atom, literal, power, parenthesizedExpression;
+non terminal Sentencia statment,simple_stmt,compound_stmt,if_stmt,for_stmt,while_stmt;
+non terminal Suite     suite;
+non terminal Variable  assignment_stmt,expression_list;
+non terminal Expresion list_display,atom, literal, power, parenthesizedExpression;
 non terminal Expresion u_expr,m_expr,a_expr;
 non terminal Expresion shift_expr,and_expr,xor_expr,or_expr;
 non terminal Expresion or_test,and_test,not_test, comparison;
-non terminal Expresion expression;
-non terminal Sentencia simple_stmt;
-non terminal Variable assignment_stmt;
+non terminal Expresion expression,expression_stmt,enclosure,parenth_form;
+non terminal Expresion print_stmt;
 
 precedence left OPAMAS, OPAMENOS;
 
@@ -60,23 +62,42 @@ precedence left OPAMAS, OPAMENOS;
 program ::= stmt_list:s {: RESULT = s; :};
 
 //Lista de sentencias
-stmt_list ::= stmt_list:sl simple_stmt:s {: sl.add(s); RESULT = sl; :}
+stmt_list ::= stmt_list:sl statment:s {: sl.add(s); RESULT = sl; :}
               | {: RESULT = new ArrayList<Sentencia>(); :}
               ;
 
+statment ::= simple_stmt:s {: RESULT = s; :}
+            |compound_stmt:c {: RESULT = c; :}
+            ;
+
+compound_stmt ::=   if_stmt:i {: RESULT = i; :}
+                  | while_stmt
+                  ;
+
+while_stmt ::= WHILE parenthesizedExpression:pe DOSPUNTOS suite:su {: RESULT = new While(pe,su.getSentencias());:}
+              ;
+
+if_stmt ::=   IF parenthesizedExpression:pe DOSPUNTOS suite:su {: RESULT = new If(pe,su.getSentencias());:}
+            | IF parenthesizedExpression:pe DOSPUNTOS suite:su ELSE DOSPUNTOS s VariableLista(en); :}
 //Sentencia simple
-simple_stmt ::= expression:e PUNTOYCOMA {: RESULT = e;:}
-                | expression:e {: RESULT = e;:}
+simple_stmt ::=   expression_stmt:e {: RESULT = e;:}
                 | assignment_stmt:a PUNTOYCOMA {: RESULT = a;:}
                 | assignment_stmt:a {: RESULT = a;:}
+                | print_stmt:p PUNTOYCOMA {: RESULT = p;:}
+                | print_stmt:p {: RESULT = p;:}
                 ;
 
-//Asignacion
+//Asignacion //
 assignment_stmt ::=   ID:i ASIG:a expression:e {: RESULT = new Variable(i,e); :}
+                    | ID:i ASIG:a enclosure:en {: RESULT = new Variable(i,en); :}
+                    | ID:i ASIG:a LPAREN expression:e COMA RPAREN, {: ArrayList<Expresion> a = new ArrayList<Expresion>();
+                                                                      a.add(e);
+                                                                      Expresion exp = new Expresion ("TUPLA", a, TipoExpresion.TUPLA, eleft+1, eright+1 );
+                                                                      RESULT = new Variable(i,a); :}
                    ;
 
 //Expresion (ACA PUEDE LLEGAR A IR EXPRESIONES SEPARADAS POR COMA ',' PARA TUPLAS LISTAS DICCIONARIOS LLAMADAS A PARAMETORS)
-expression_stmt ::=  expression:e {: RESULT = e; :}
+expression_stmt ::=  expression_list:el {: RESULT = el;:}
                     ;
 
 //Expresiones booleanas
@@ -145,10 +166,28 @@ power ::=   atom: a {: RESULT = a; :}
           | atom:a OPAEXP:o u_expr:u {: RESULT = new Expresion("**",a,u,TipoExpresion.BINARIA,oleft+1,oright+1); :}
           ;
 
-atom ::= literal: l {: RESULT = l;:}
+atom ::= literal:l {: RESULT = l;:}
         | parenthesizedExpression:pe {:RESULT = pe;:}
         | ID: id  {:RESULT = new Expresion(id,TipoExpresion.ID,idleft+1,idright+1);:}
         ;
+
+enclosure ::=   list_display:l {:RESULT = l;:}
+              | parenth_form:p {:RESULT = p;:}
+              ;
+
+parenth_form ::= LPAREN expression_list:el RPAREN {:RESULT = new Expresion("TUPLA",el,TipoExpresion.TUPLA,elleft+1,elright+1);:}
+                | LPAREN:l  RPAREN {: ArrayList<Expression>() a = new ArrayList<Expression>()
+                                      RESULT = new Expresion("TUPLA",a,TipoExpresion.TUPLA,lleft+1,lright+1); :}
+
+list_display ::= LCORCHETE expression_list:el RCORCHETE {:RESULT = new Expresion("LIST",el,TipoExpresion.LIST,elleft+1,elright+1);:}
+                | LCORCHETE:l RCORCHETE {: ArrayList<Expression>() a = new ArrayList<Expression>()
+                                          RESULT = new Expresion("LISTA",a,TipoExpresion.LISTA,lleft+1,lright+1); :}
+                ;
+
+expression_list ::=   expression:e {: RESULT = e; :}
+                    | expression:e COMA expression_list:el {: el.add(e); RESULT = el;  :}
+                    | {: RESULT = new ArrayList<Expression>(); :}
+                    ;
 
 literal	::=   STRING: s {:RESULT = new Expresion(s,TipoExpresion.STRING,sleft+1,sright+1);:}
           	| INTEGER: i {:RESULT = new Expresion(i,TipoExpresion.INTEGER,ileft+1,iright+1);:}
@@ -160,3 +199,6 @@ literal	::=   STRING: s {:RESULT = new Expresion(s,TipoExpresion.STRING,sleft+1,
 
 parenthesizedExpression ::= LPAREN expression:e RPAREN {:RESULT = e;:}
                             ;
+
+print_stmt ::= PRINT expression:e {:RESULT = new Expresion("print",e,TipoExpresion.FUNCTION_PREDEF,eleft+1,eright+1);:}
+                ;
