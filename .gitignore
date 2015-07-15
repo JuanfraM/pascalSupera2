@@ -14,6 +14,6 @@ hs_err_pid*
 .classpath
 
 language/java/*
-src/com/language/parser/Parser.java
-src/com/language/parser/Scanner.java
-src/com/language/parser/sym.java
+*Parser.java
+*Scanner.java
+*sym.java
