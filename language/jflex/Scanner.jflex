@@ -31,17 +31,16 @@ import com.language.model.expression.*;
 	private Symbol symbol(int type, Object value) {
 		return new Symbol(type, yyline, yycolumn, value);
 	}
-	
-	private Symbol noTab (){
-		System.out.println("NOTAB"); 
-		return symbol(sym.NOTAB);
-	}
+
 %}
 
 %eofval{
-	for (int i = 0; i < tabs ; i++)
-		noTab();
-    return symbol(sym.EOF);
+        if (tabsAnterior>0){
+            tabsAnterior--;
+            System.out.println("NOTAB");
+            return symbol(sym.NOTAB);
+        }
+        return symbol(sym.EOF);
 %eofval}
 
 LineTerminator = \r|\n|\r\n
@@ -159,11 +158,10 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 	{LineTerminator}/[a-zA-Z0-9]			{
 												tabs = 0;
 												if (tabs < tabsAnterior) {
-													int contador = tabsAnterior - tabs;
-													tabsAnterior = tabs;
-													for (int i = 0; i < contador; i++){
-														noTab();
-													}
+													yypushback(1);
+													tabsAnterior--;
+													System.out.println("NOTAB"); 
+													return symbol(sym.NOTAB);
 												}
 												else if (tabs > tabsAnterior){
 													tabsAnterior = tabs;
@@ -265,11 +263,10 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 										yybegin(YYINITIAL);
 										tabs++;
 										if (tabs < tabsAnterior) {
-											int contador = tabsAnterior - tabs;
-											tabsAnterior = tabs;
-											for (int i = 0; i < contador; i++){
-												noTab();
-											}
+											yypushback(1);
+											tabsAnterior--;
+											System.out.println("NOTAB"); 
+											return symbol(sym.NOTAB);
 										}
 										else if (tabs > tabsAnterior){
 											tabsAnterior = tabs;

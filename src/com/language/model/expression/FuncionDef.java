@@ -26,7 +26,7 @@ public class FuncionDef extends Sentencia {
 	}
 	
 	public String getValor() {
-		return null;
+		return this.valor.toString();
 	}
 	
 	
