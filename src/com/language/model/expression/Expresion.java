@@ -64,6 +64,9 @@ public class Expresion extends Sentencia {
 		else if (this.tipo == TipoExpresion.BOOL){
 			ret = new Resultado(this.value.toString(), TipoResultado.BOOL);
 		}
+		else if (this.tipo == TipoExpresion.NONE){
+			ret = new Resultado(this.value.toString(), TipoResultado.NONE);
+		}
 		else if (this.tipo == TipoExpresion.STRING){
 			ret = new Resultado(this.value.toString(), TipoResultado.STRING);
 		}
@@ -803,7 +806,7 @@ public class Expresion extends Sentencia {
 			}
 			
 		}
-			
+		
 		return ret;
 	}
 

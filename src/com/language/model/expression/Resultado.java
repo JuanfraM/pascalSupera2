@@ -46,6 +46,21 @@ public class Resultado {
 	        
 	        return respuesta;
 		}
+		else if (this.tipo == TipoResultado.TUPLA){
+	        String aux = "";
+	        if (this.valores.size() == 0)
+	        	return "()";
+	        for ( Resultado r : this.valores) {
+	            if(r.getTipo() == TipoResultado.STRING)
+	                aux = aux + "'" + r.toString() + "'" + ", ";
+	            else
+	                aux = aux + r.toString() + ", ";
+	        }
+	        aux = aux.substring(0, aux.length()-2);
+	        String respuesta = '(' + aux + ')';
+	        
+	        return respuesta;
+		}
 		else 
 			return this.valor;
 	}

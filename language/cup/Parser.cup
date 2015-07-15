@@ -39,7 +39,7 @@ terminal OPAMAS, OPAMENOS, OPAPROD, OPAEXP,OPADIV,OPADIVENTERA,OPAMOD;
 terminal OPBABDAND, OPBABOR, OPBABXOR, OPBABNOT, OPBABSHIFTL, OPBABSHIFTR;
 terminal AND, OR, NOT, OPBIGUAL, OPBDISTINTO, OPBMENOR, OPBMAYOR, OPBMENORIGUAL, OPBMAYORIGUAL;
 terminal ASIG, LCORCHETE, RCORCHETE, LLLAVE, RLLAVE,LPAREN,RPAREN,PUNTOYCOMA ,PUNTO, COMA, DOSPUNTOS;
-terminal TRUE, FALSE;
+terminal TRUE, FALSE, NONE;
 terminal IF, ELSE, WHILE, BREAK, CONTINUE, FOR,IN;
 terminal DEF,DATAFUNCION, FUNCION,RETURN,PRINT;
 terminal STRING, ID, INTEGER, LONG, FLOAT;
@@ -55,7 +55,7 @@ non terminal Expresion u_expr,m_expr,a_expr;
 non terminal Expresion shift_expr,and_expr,xor_expr,or_expr;
 non terminal Expresion or_test,and_test,not_test, comparison;
 non terminal Expresion expression,expression_stmt,enclosure,parenth_form;
-non terminal Expresion print_stmt;
+non terminal FuncionesPredefinidas print_stmt;
 
 precedence left OPAMAS, OPAMENOS;
 
@@ -179,15 +179,21 @@ enclosure ::=   list_display:l {:RESULT = l;:}
               | parenth_form:p {:RESULT = p;:}
               ;
 
-parenth_form ::= LPAREN expression_list:el RPAREN {:RESULT = new Expresion("TUPLA",el,TipoExpresion.TUPLA,elleft+1,elright+1);:}
+parenth_form ::= LPAREN expression_list:el COMA RPAREN {: RESULT = new Expresion("TUPLA",el,TipoExpresion.TUPLA,elleft+1,elright+1);:}
+				|LPAREN expression_list:el RPAREN {: if (el.size() == 1) 
+														RESULT = el.get(0);
+													else 
+														RESULT = new Expresion("TUPLA",el,TipoExpresion.TUPLA,elleft+1,elright+1); :}
+				|LPAREN:l RPAREN {: ArrayList<Expresion> a = new ArrayList<Expresion>();
+									RESULT = new Expresion("TUPLA",a,TipoExpresion.TUPLA,lleft+1,lright+1);:}
                 ;
 
 list_display ::= LCORCHETE expression_list:el RCORCHETE {:RESULT = new Expresion("LIST",el,TipoExpresion.LIST,elleft+1,elright+1);:}
                 ;
 
 expression_list ::=   expression:e {: ArrayList<Expresion> a = new ArrayList<Expresion>();
-                                    a.add(e) ;
-                                    RESULT = a;:}
+										a.add(e) ;
+										RESULT = a;:}
                     | expression_list:el COMA expression:e {: el.add(e); RESULT = el;  :}
                     ;
 
@@ -197,7 +203,8 @@ literal	::=   STRING: s {:RESULT = new Expresion(s,TipoExpresion.STRING,sleft+1,
           	| FLOAT: d {:RESULT = new Expresion(d,TipoExpresion.FLOAT,dleft+1,dright+1);:}
             | TRUE: t {:RESULT = new Expresion(t,TipoExpresion.BOOL,tleft+1,tright+1);:}
             | FALSE: f {:RESULT = new Expresion(f,TipoExpresion.BOOL,fleft+1,fright+1);:}
+			| NONE: n {:RESULT = new Expresion(n,TipoExpresion.NONE,nleft+1,nright+1);:}
           	;
 
-print_stmt ::= PRINT expression:e {:RESULT = new Expresion("print",e,TipoExpresion.FUNCTION_PREDEF,eleft+1,eright+1);:}
+print_stmt ::= PRINT expression:e {:RESULT = new FuncionesPredefinidas("print", e, eleft+1,eright+1);:}
                 ;

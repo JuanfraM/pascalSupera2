@@ -99,6 +99,7 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 
 	True				{ System.out.println("TRUE"); return symbol(sym.TRUE , "True" ); }
 	False				{ System.out.println("FALSE"); return symbol(sym.FALSE, "False"); }
+	None				{ System.out.println("FALSE"); return symbol(sym.NONE, "None"); }
 
 	if					{ System.out.println("IF"); return symbol(sym.IF, "if"); }
 	else				{ System.out.println("ELSE"); return symbol(sym.ELSE, "else"); }
@@ -126,7 +127,7 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 	insert				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "insert"); }
 	size				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "size"); }
 
-	print				{ System.out.println("FUNCION"); return symbol(sym.FUNCION, "print"); }
+	print				{ System.out.println("FUNCION"); return symbol(sym.PRINT, "print"); }
 	raw_input			{ System.out.println("FUNCION"); return symbol(sym.FUNCION, "raw_input"); }
 	int					{ System.out.println("FUNCION"); return symbol(sym.FUNCION, "int"); }
 	float				{ System.out.println("FUNCION"); return symbol(sym.FUNCION, "float"); }

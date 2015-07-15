@@ -11,5 +11,6 @@ public enum TipoExpresion {
 	ID,
 	LIST,
 	TUPLA,
-	NONE
+	NONE,
+	FUNCTION_PREDEF,
 }

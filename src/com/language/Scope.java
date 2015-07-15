@@ -25,16 +25,33 @@ public class Scope {
 		this.scope.pop();
 	}
 	
-	public boolean isVariableInScopeLocal (String Key){
-		return this.scope.peek().containsKey(Key);
-	}
+	//SOBRE EL SCOPE LOCAL
 	
 	public void replaceScopeLocal(String key, Resultado valor){
 		this.scope.peek().replace(key, valor);
 	}
 	
-	public void addVariableScopeLocal(String key, Resultado valor){
+	public void putScopeLocal(String key, Resultado valor){
 		this.scope.peek().put(key, valor);
+	}
+	
+	public boolean containsKeyScopeLocal(String Key){
+		return this.scope.peek().containsKey(Key);
+	}
+	
+	public Resultado getScopeLocal(String Key){
+		return this.scope.peek().get(Key);
+	}
+	
+	//SOBRE CUALQUIER SCOPE
+	
+	public void replace(String key, Resultado valor){
+		for (Map<String,Resultado> m : this.scope){
+			if (m.containsKey(key)){
+				m.replace(key, valor);
+				return;
+			}
+		}
 	}
 	
 	public boolean containsKey(String Key){
@@ -45,7 +62,7 @@ public class Scope {
 		return false;
 	}
 	
-	public Resultado get (String Key){
+	public Resultado get(String Key){
 		Resultado ret = null;
 		for (Map<String,Resultado> m : this.scope){
 			if (m.containsKey(Key))
@@ -53,5 +70,4 @@ public class Scope {
 		}
 		return ret;
 	}
-	
 }
