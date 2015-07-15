@@ -3,7 +3,12 @@ package com.language;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.language.model.expression.Funcion;
+import com.language.model.expression.FuncionDef;
+import com.language.model.expression.Resultado;
 import com.language.model.expression.Sentencia;
 import com.language.parser.ExpressionParser;
 
@@ -16,8 +21,9 @@ public class Main {
 			ArrayList<Sentencia> Sentencias = ExpressionParser.parse(file);
 			
 			Scope Variables = new Scope();
+			Map<String,FuncionDef> Funciones = new HashMap<String,FuncionDef>();
 			
-			Ejecutar.ejecutar(Sentencias, Variables);
+			Ejecutar.ejecutar(Sentencias, Variables, Funciones);
 			
 		} 
 		catch (FileNotFoundException e) {

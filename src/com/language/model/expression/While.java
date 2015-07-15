@@ -1,6 +1,7 @@
 package com.language.model.expression;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.language.Ejecutar;
 import com.language.Scope;
@@ -29,17 +30,17 @@ public class While extends Sentencia{
 	}
 
 	@Override
-	public Resultado ejecutar(Scope variables) throws ParsingException {
+	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> Funciones) throws ParsingException {
 		boolean bandera;
-		Resultado res = this.condicion.ejecutar(variables);	
+		Resultado res = this.condicion.ejecutar(variables, Funciones);	
 		/** CONDICION NO NULA*/
 		if(res.getTipo() != TipoResultado.NONE) {
-			Resultado resultado_condicion = this.condicion.ejecutar(variables);
+			Resultado resultado_condicion = this.condicion.ejecutar(variables, Funciones);
 			if(resultado_condicion.getTipo() == TipoResultado.BOOL){	
 				bandera = (Boolean.parseBoolean(resultado_condicion.getValor()));
 				while(bandera){
-					Ejecutar.ejecutar(this.sentencias, variables);
-					resultado_condicion = this.condicion.ejecutar(variables);
+					Ejecutar.ejecutar(this.sentencias, variables, Funciones);
+					resultado_condicion = this.condicion.ejecutar(variables, Funciones);
 					bandera = (Boolean.parseBoolean(resultado_condicion.getValor()));
 				}
 			}

@@ -1,6 +1,7 @@
 package com.language.model.expression;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.language.Ejecutar;
 import com.language.Scope;
@@ -66,8 +67,8 @@ public class If extends Sentencia{
 	}
 
 	@Override
-	public Resultado ejecutar(Scope variables) throws ParsingException {	
-		Resultado res = condicion.ejecutar(variables);	
+	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> Funciones) throws ParsingException {	
+		Resultado res = condicion.ejecutar(variables, Funciones);	
 		if(res.getTipo() == TipoResultado.BOOL){			
 			ArrayList<Sentencia> suite = null;
 			boolean ejecuta =  true;
@@ -85,7 +86,7 @@ public class If extends Sentencia{
 				ejecuta = false;
 			}
 			if(ejecuta){
-				Ejecutar.ejecutar(suite, variables);
+				Ejecutar.ejecutar(suite, variables, Funciones);
 			}
 		/** ERROR SEMANTICO */
 		}else{											//IF_EXP

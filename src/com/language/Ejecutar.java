@@ -1,28 +1,40 @@
 package com.language;
 
 import java.util.ArrayList;
+import java.util.Map;
 
+import com.language.model.expression.Funcion;
+import com.language.model.expression.FuncionDef;
 import com.language.model.expression.FuncionesPredefinidas;
 import com.language.model.expression.Sentencia;
 import com.language.model.expression.Variable;
 
 public class Ejecutar {
 	
-	public static void ejecutar(ArrayList<Sentencia> Sentencias, Scope Variables){
+	public static void ejecutar(ArrayList<Sentencia> Sentencias, Scope Variables, Map<String,FuncionDef> Funciones){
+		
 		for (Sentencia stmt : Sentencias) {
+
+			//Asignacion de variables
 			if (stmt instanceof Variable){
 				if (Variables.containsKeyScopeLocal(stmt.getValor())){
-					Variables.replaceScopeLocal(stmt.getValor(), stmt.ejecutar(Variables));
-					System.out.println("[DEBUG] -- Asigno variable --- " + stmt.getValor().toString() + " = " + Variables.get(stmt.getValor().toString()));
+					Variables.replaceScopeLocal(stmt.getValor(), stmt.ejecutar(Variables, Funciones));
 				}
 				else {
-					Variables.putScopeLocal(stmt.getValor(), stmt.ejecutar(Variables));
-					System.out.println("[DEBUG] -- Declaro variable --- " + stmt.getValor().toString() + " = " + Variables.get(stmt.getValor().toString()));
+					Variables.putScopeLocal(stmt.getValor(), stmt.ejecutar(Variables, Funciones));
 				}
 			}
+			
+			//Funciones predefinidas
 			else if (stmt instanceof FuncionesPredefinidas){
-				stmt.ejecutar(Variables);
+				stmt.ejecutar(Variables, Funciones);
+			}
+			
+			//Funciones del usuario
+			else if (stmt instanceof Funcion){
+				stmt.ejecutar(Variables, Funciones);
 			}
 		}
+		
 	}
 }

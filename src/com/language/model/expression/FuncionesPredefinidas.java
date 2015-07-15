@@ -1,6 +1,7 @@
 package com.language.model.expression;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.language.Scope;
 
@@ -33,12 +34,12 @@ public class FuncionesPredefinidas extends Sentencia {
 		this.arguments.add(arg2);
 	}
 
-	public Resultado ejecutar(Scope variables) {
+	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> Funciones) {
 		Resultado ret = null;
 		
 		if (this.value == "print"){
 			ret = new Resultado("True", TipoResultado.BOOL);
-			System.out.println(this.arguments.get(0).ejecutar(variables).toString());
+			System.out.println(this.arguments.get(0).ejecutar(variables, Funciones).toString());
 		}
 
 		return ret;

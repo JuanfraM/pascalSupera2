@@ -9,15 +9,15 @@ import com.language.Scope;
 public class Variable extends Sentencia {
 
 	private Object id; 
-	private Expresion argument;
+	private Sentencia argument;
 	
 	public Variable(Object id, Expresion argument){
 		this.id = id;
 		this.argument = argument;	
 	}
 	
-	public Resultado ejecutar (Scope variables){
-		return this.argument.ejecutar(variables);
+	public Resultado ejecutar (Scope variables, Map<String,FuncionDef> Funciones){
+		return this.argument.ejecutar(variables, Funciones);
 	}
 	
 	public String getValor(){
