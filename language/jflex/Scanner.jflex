@@ -39,6 +39,8 @@ import com.language.model.expression.*;
 %}
 
 %eofval{
+	for (int i = 0; i < tabs ; i++)
+		noTab();
     return symbol(sym.EOF);
 %eofval}
 

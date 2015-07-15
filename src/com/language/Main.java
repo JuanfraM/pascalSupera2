@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.language.exceptions.ParsingException;
 import com.language.model.expression.Funcion;
 import com.language.model.expression.FuncionDef;
 import com.language.model.expression.Resultado;
@@ -19,7 +20,9 @@ public class Main {
 			
 			FileInputStream file = new FileInputStream("E:\\codigo.py");//args[0]);
 			ArrayList<Sentencia> Sentencias = ExpressionParser.parse(file);
-			
+			if (Sentencias.isEmpty())
+				return;
+				
 			Scope Variables = new Scope();
 			Map<String,FuncionDef> Funciones = new HashMap<String,FuncionDef>();
 			
@@ -30,7 +33,7 @@ public class Main {
 			System.out.println("No se encontro el archivo :" + args[0]);
 		}
 		catch (Exception e) {
-			System.out.println("Error inesperado: " + e.toString());
+			System.out.println(e.toString());
 		}
 	}
 	
