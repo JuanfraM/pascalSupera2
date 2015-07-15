@@ -17,15 +17,15 @@ public class FuncionDef extends Sentencia {
 		this.sentencias = sentencias;
 	}
 
-	@Override
 	public Resultado ejecutar(Scope variables, Map<String, FuncionDef> Funciones) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	public ArrayList<String> getParametros(){
+		return this.parametros;
+	}
+	
 	public String getValor() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

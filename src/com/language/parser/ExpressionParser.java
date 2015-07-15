@@ -12,7 +12,7 @@ import com.language.model.expression.Sentencia;
 public class ExpressionParser {
 
 	public static ArrayList<Sentencia> parse(FileInputStream expText) {
-		
+				
 		Parser parser = new Parser(new Scanner(expText));
 		try {
 			Symbol topsym = parser.parse();

@@ -3,7 +3,7 @@ package com.language;
 import java.util.ArrayList;
 import java.util.Map;
 
-import com.language.model.expression.Funcion;
+import com.language.model.expression.FuncionCall;
 import com.language.model.expression.FuncionDef;
 import com.language.model.expression.FuncionesPredefinidas;
 import com.language.model.expression.Sentencia;
@@ -31,7 +31,7 @@ public class Ejecutar {
 			}
 			
 			//Funciones del usuario
-			else if (stmt instanceof Funcion){
+			else if (stmt instanceof FuncionCall){
 				stmt.ejecutar(Variables, Funciones);
 			}
 		}

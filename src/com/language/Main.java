@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.language.exceptions.ParsingException;
-import com.language.model.expression.Funcion;
+import com.language.model.expression.FuncionCall;
 import com.language.model.expression.FuncionDef;
 import com.language.model.expression.Resultado;
 import com.language.model.expression.Sentencia;
