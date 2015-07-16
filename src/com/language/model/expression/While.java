@@ -44,15 +44,14 @@ public class While extends Sentencia{
 						if (eje.getTipo() == TipoResultado.BREAK)
 							return null;
 						if (eje.getTipo() == TipoResultado.RETURN)
-							return eje;
-						
+							return eje;						
 					}
 					res = this.condicion.ejecutar(variables, Funciones, loop);
 					bandera = (Boolean.parseBoolean(res.getValor()));
 				}
 			}
 			else 
-				throw new ParsingException("La condicion debe ser booleana ");
+				throw new ParsingException(ParsingException.ERROR_WHILE);
 		}			
 			
 		return null;

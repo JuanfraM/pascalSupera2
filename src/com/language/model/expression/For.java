@@ -3,7 +3,9 @@ package com.language.model.expression;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.language.Ejecutar;
 import com.language.Scope;
+import com.language.exceptions.ParsingException;
 
 public class For extends Sentencia{
 	
@@ -18,131 +20,57 @@ public class For extends Sentencia{
 		this.sentencias = sentencias;
 		
 	}
-//	
-//	@Override
-//	public String toString() {
-//		String res = null;				
-//		String bloque ="";
-//		for(Sentencia s : this.sentencias){
-//			bloque = bloque + s.toString();
-//		}	
-//		res = "For\n" + "inicializacion: " + this.inicializacion.toString()
-//			 +"condicion: " + this.condicion.toString() +  "actualizacion: "+ this.actualizacion.toString()
-//			 +"\nBloque: "+ bloque + "\n";			
-//		return res;
-//	}
-//
-//	@Override
-//	public Resultado ejecutar() throws ParsingException, Exception {
-//		/** INICIALIZACION  */
-//		if(this.inicializacion.getExp().getTipo() != tipoExpresion.NULL){
-//			if(this.inicializacion.isVarDef()){
-//				this.scope_local.addVariable(this.inicializacion);
-//			}
-//			this.inicializacion.ejecutar();
-//		}
-//		/** CONDICION NO NULA*/
-//		if(this.condicion.getTipo() != tipoExpresion.NULL) {
-//			Resultado res_cond = this.condicion.evaluar();
-//			if(res_cond.getTipo() == tipoExpresion.BOOLEAN){
-//				
-//				/** ACTUALIZACION NO NULA */
-//				if(this.actualizacion.getExp().getTipo() != tipoExpresion.NULL) {
-//					if(this.actualizacion.isVarDef()){
-//						this.scope_local.addVariable(this.actualizacion);
-//					}
-//					this.actualizacion.ejecutar();
-//						
-//					/** SIMULACION FOR */
-//					boolean exp = ((tipoBoolean)res_cond).getValue();
-//					while(exp){
-//						try{
-//							this.ejecutarSentencias(this.sentencias);
-//							exp = ((tipoBoolean)this.condicion.evaluar()).getValue();
-//							if(exp)
-//								this.actualizacion.ejecutar();
-//						}catch (ParsingException e){
-//							if(e.getSentenciaType() == tipoSentencia.BREAK ){
-//								exp = false;
-//							}else if(e.getSentenciaType() == tipoSentencia.CONTINUE){
-//								this.actualizacion.ejecutar();
-//							}else{
-//								throw e;
-//							}
-//						}
-//					}
-//				}
-//				else{ /**ACTUALIZACION NULA*/
-//					boolean exp = ((tipoBoolean)res_cond).getValue();
-//					while(exp){
-//						try{
-//							this.ejecutarSentencias(this.sentencias);
-//							exp = ((tipoBoolean)this.condicion.evaluar()).getValue();
-//						}catch (ParsingException e){
-//							if(e.getSentenciaType() == tipoSentencia.BREAK ){
-//								exp = false;
-//							}else if(e.getSentenciaType() == tipoSentencia.CONTINUE){
-//								/**no hago nada, la actualizacion es nula*/
-//							}else{
-//								throw e;
-//							}
-//						}
-//					}
-//				}
-//			/** ERROR SEMANTICO */
-//			}else{
-//				throw new ParsingException(ParsingException.FOR_EXP+condicion.getPosicion());
-//			}
-//		}
-//		else{ /**CONDICION NULA*/
-//			/**ACTUALIZACION NO NULA*/
-//			if(this.actualizacion.getExp().getTipo() != tipoExpresion.NULL) {
-//				if(this.actualizacion.isVarDef()){
-//					this.scope_local.addVariable(this.actualizacion);
-//				}
-//				this.actualizacion.ejecutar();
-//					
-//				/** SIMULACION FOR */
-//				boolean cond = true;/**for infinito, solo lo para el break*/
-//				while(cond){
-//					try{
-//						this.ejecutarSentencias(this.sentencias);
-//						this.actualizacion.ejecutar();
-//					}catch (ParsingException e){
-//						if(e.getSentenciaType() == tipoSentencia.BREAK ){
-//							cond = false;
-//						}else if(e.getSentenciaType() == tipoSentencia.CONTINUE){
-//							this.actualizacion.ejecutar();
-//						}else{
-//							throw e;
-//						}
-//					}
-//				}
-//			} /**ACTUALIZACION NULA*/
-//			else{
-//				boolean cond = true;/**for infinito, solo lo para un break*/
-//				while(cond){
-//					try{
-//						this.ejecutarSentencias(this.sentencias);
-//					}catch (ParsingException e){
-//						if(e.getSentenciaType() == tipoSentencia.BREAK ){
-//							cond = false;
-//						}else if(e.getSentenciaType() == tipoSentencia.CONTINUE){
-//							/**no hago nada, la actualizacion es nula*/
-//						}else{
-//							throw e;
-//						}
-//					}
-//				}
-//			}
-//		}
-//			
-//		return null;
-//	}
+	
+	@Override
+	public String toString() {
+		String res = null;				
+		String bloque ="";
+		for(Sentencia s : this.sentencias){
+			bloque = bloque + s.toString();
+		}	
+		res = "For\n" + "variable: " + this.iterador.toString()
+			 +"lista: " + this.lista.toString()
+			 +"\nSuite: "+ bloque + "\n";			
+		return res;
+	}
 
 	@Override
-	public Resultado ejecutar(Scope variables, Map<String, FuncionDef> Funciones) {
-		// TODO Auto-generated method stub
+	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> funciones, boolean loop) throws ParsingException {
+		Resultado it = null;
+		ArrayList<Resultado> lista_iterar= null;
+		
+		if (!variables.containsKeyScopeLocal((this.iterador.toString()))){
+			variables.putScopeLocal(this.iterador.toString(), it);
+		}
+		
+		Expresion e = this.lista.get(0);
+		if(e.getTipo()==TipoExpresion.LIST){
+			lista_iterar = new ArrayList<Resultado>();
+			this.lista = e.getArguments();
+			for(Expresion ex: this.lista){
+				it = ex.ejecutar(variables, funciones,loop);
+				lista_iterar.add(it);
+			}
+		}
+		else if(e.getTipo()== TipoExpresion.ID) {
+			Resultado variable = variables.get(e.getValor());
+			if (variable.getTipo()!= TipoResultado.LIST)
+				throw new ParsingException(ParsingException.ERROR_FOR1);
+			lista_iterar= variable.getValores();
+		}
+		
+		for (int i = 0; i< lista_iterar.size();i++){
+			 variables.replaceScopeLocal(this.iterador.toString(), lista_iterar.get(i));
+			 Resultado eje = Ejecutar.ejecutar(this.sentencias, variables, funciones,loop);
+			//Verifico que no haya llegado a un break return
+				if (eje != null){
+					if (eje.getTipo() == TipoResultado.BREAK)
+						return null;
+					if (eje.getTipo() == TipoResultado.RETURN)
+						return eje;					
+				}
+		}			
+			
 		return null;
 	}
 

@@ -74,11 +74,20 @@ statment ::= simple_stmt:s NEWLINE{: RESULT = s; :}
 
 compound_stmt ::=   if_stmt:i {: RESULT = i; :}
                   |while_stmt:w {: RESULT = w; :}
-                  | for_stmt
+                  | for_stmt:f  {: RESULT = f; :}
                   | funcdef:f {: RESULT = f; :}
                   ;
-
-for_stmt ::=  FOR ID IN expression_list DOSPUNTOS suite
+                                                  
+for_stmt ::=  FOR ID:id IN expression_list:el DOSPUNTOS suite:s {:
+                                              Expresion e = el.get(0);
+                                              if((e.getTipo()!=TipoExpresion.LIST)&&(e.getTipo()!=TipoExpresion.ID))
+                                                throw new ParsingException(ParsingException.ERROR_FOR1);
+                                              if(e.getTipo()==TipoExpresion.LIST){
+                                                if(e.getArguments().size()<2)
+                                                  throw new ParsingException(ParsingException.ERROR_FOR2);
+                                              }
+                                               RESULT = new For(id,el,s);:}
+                                              }
             ;
 
 //originalmente era expression_list
@@ -227,6 +236,9 @@ funcdef ::= DEF ID:id LPAREN expression_list:el RPAREN DOSPUNTOS suite:s {:
                         }
                         ArrayList<String> parametros = new ArrayList<String> ();
                         for (Expresion e: el){
+                          if(parametros.contains(e.getValor()))
+                            throw new ParsingException("Error en la declaracion de funcion: no puede haber parametros repetidos");
+                               
                           parametros.add(e.getValor());
                         }
                         RESULT = new FuncionDef(id, parametros, s);:}
