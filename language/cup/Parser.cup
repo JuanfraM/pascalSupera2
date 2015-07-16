@@ -231,6 +231,6 @@ funcdef ::= DEF ID:id LPAREN expression_list:el RPAREN DOSPUNTOS suite:s {:
                           ArrayList<String> parametros = new ArrayList<String> ();
                           RESULT = new FuncionDef(id, parametros, s);:}
              ;
-
-call ::=  ID LPAREN expression_list:el RPAREN 
+             
+call ::=  ID:id parenth_form:p {:RESULT = new FuncionCall(id,p.getArguments(),idleft+1,idright+1);:}
         ;
