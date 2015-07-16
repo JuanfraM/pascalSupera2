@@ -111,9 +111,9 @@ simple_stmt ::=   expression_stmt:e {: RESULT = e;:}
                 | assignment_stmt:a {: RESULT = a;:}
                 | print_stmt:p PUNTOYCOMA {: RESULT = p;:}
                 | print_stmt:p {: RESULT = p;:}
-				| BREAK: f {:RESULT = new Break(fleft+1,fright+1);:}
-				| CONTINUE: f {:RESULT = new Continue (fleft+1,fright+1);:}
-				| return_stmt:r {:RESULT = r;:}
+        				| BREAK: f {:RESULT = new Break(fleft+1,fright+1);:}
+        				| CONTINUE: f {:RESULT = new Continue (fleft+1,fright+1);:}
+        				| return_stmt:r {:RESULT = r;:}
                 ;
 				
 return_stmt ::= RETURN:r {: new Return (rleft+1,rright+1); :}

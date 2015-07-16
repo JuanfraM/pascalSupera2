@@ -86,7 +86,10 @@ public class If extends Sentencia{
 				ejecuta = false;
 			}
 			if(ejecuta){
-				Ejecutar.ejecutar(suite, variables, Funciones, loop);
+				Resultado eje = Ejecutar.ejecutar(suite, variables, Funciones, loop);
+				if (eje != null){
+					return eje;	
+				}
 			}
 		/** ERROR SEMANTICO */
 		}else{											//IF_EXP
