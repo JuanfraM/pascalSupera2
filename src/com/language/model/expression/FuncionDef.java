@@ -25,6 +25,10 @@ public class FuncionDef extends Sentencia {
 		return this.parametros;
 	}
 	
+	public ArrayList<Sentencia> getSentencias(){
+		return this.sentencias;
+	}
+	
 	public String getValor() {
 		return this.valor.toString();
 	}

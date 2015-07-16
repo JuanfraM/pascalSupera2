@@ -8,7 +8,9 @@ import com.language.model.expression.*;
 
 public class Ejecutar {
 	
-	public static void ejecutar(ArrayList<Sentencia> Sentencias, Scope Variables, Map<String,FuncionDef> Funciones){
+	public static Resultado ejecutar(ArrayList<Sentencia> Sentencias, Scope Variables, Map<String,FuncionDef> Funciones){
+		
+		Resultado ret = null;
 		
 		for (Sentencia stmt : Sentencias) {
 
@@ -49,7 +51,11 @@ public class Ejecutar {
 			else if (stmt instanceof For){
 				stmt.ejecutar(Variables, Funciones);
 			}
+			else if (stmt instanceof Return){
+				return stmt.ejecutar(Variables, Funciones);
+			}
 		}
+		return ret;
 		
 	}
 }

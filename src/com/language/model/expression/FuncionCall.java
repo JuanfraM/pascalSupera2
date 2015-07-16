@@ -1,6 +1,7 @@
 package com.language.model.expression;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.language.Scope;
@@ -21,22 +22,54 @@ public class FuncionCall extends Sentencia {
 
 	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> funciones) {
 
+		Resultado ret = null;
+		
+		//Valido que la funcion este definida
 		if (funciones.containsKey(this.value)){
 			
-			FuncionDef definicion = funciones.get(this.value);
 			
-			if (this.parametros.size() == definicion.getParametros().size()){				
+			//Obtengo los parametros y las sentencias de la funcion
+			FuncionDef definicion = funciones.get(this.value);
+			ArrayList<String> parametros = definicion.getParametros();
+			ArrayList<Sentencia> sentencias = definicion.getSentencias();
+			
+			//Valido que me esten llegando la cantidad de parametros correcta
+			if (this.parametros.size() == definicion.getParametros().size()){
+				
+				//Creo el scope de ejecucion de la funcion
+				variables.addScope();
+				
+				int i = 0;
+				
+				//Almacena los parametros que se pasan por referencia 
+				Map<String,String> variablesRef = new HashMap<String,String> ();
+				
+				//Recorro la lista de parametros y los agrego como variables de scope
+				for (Expresion parm : this.parametros){
+					
+					Resultado r = parm.ejecutar(variables, funciones);
+					
+					//Si es del tipo lista lo agrego a la lista de parametros por referencia
+					if (parm.getTipo() == TipoExpresion.ID && r.getTipo() == TipoResultado.LIST){
+						variablesRef.put(parametros.get(i), parm.getValor());
+					}
+					
+					//Agrego las variables al scope
+					variables.putScopeLocal(parametros.get(i), r);		
+				}
+				
+				
 				
 			}
 			else 
-				throw new ParsingException("La funcion " + this.value.toString() + "requiere mas parametros" + this.linea + " " + this.col);
+				throw new ParsingException("Cantidad parametros incorrecta para la funcion " + this.value.toString() + " " + this.linea + " " + this.col);
 			
 		}
 		else 
 			throw new ParsingException("La funcion " + this.value.toString() + "no esta denfida en la posicion" + this.linea + " " + this.col);
 		
 		
-		Resultado ret = null;
+		
 		
 		return ret;
 	}

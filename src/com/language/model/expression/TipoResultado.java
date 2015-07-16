@@ -8,5 +8,7 @@ public enum TipoResultado {
 	FLOAT,
 	LIST,
 	TUPLA,
-	NONE
+	NONE,
+	CONTINUE,
+	BREAK
 }
