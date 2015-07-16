@@ -30,20 +30,21 @@ public class While extends Sentencia{
 	}
 
 	@Override
-	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> Funciones) throws ParsingException {
+	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> Funciones, boolean loop) throws ParsingException {
 		boolean bandera;
-		Resultado res = this.condicion.ejecutar(variables, Funciones);	
+		Resultado res = this.condicion.ejecutar(variables, Funciones,  loop);	
 		/** CONDICION NO NULA*/
 		if(res.getTipo() != TipoResultado.NONE) {
-			Resultado resultado_condicion = this.condicion.ejecutar(variables, Funciones);
-			if(resultado_condicion.getTipo() == TipoResultado.BOOL){	
-				bandera = (Boolean.parseBoolean(resultado_condicion.getValor()));
+			if(res.getTipo() == TipoResultado.BOOL){	
+				bandera = (Boolean.parseBoolean(res.getValor()));
 				while(bandera){
-					Ejecutar.ejecutar(this.sentencias, variables, Funciones);
-					resultado_condicion = this.condicion.ejecutar(variables, Funciones);
-					bandera = (Boolean.parseBoolean(resultado_condicion.getValor()));
+					Ejecutar.ejecutar(this.sentencias, variables, Funciones, true);
+					res = this.condicion.ejecutar(variables, Funciones, loop);
+					bandera = (Boolean.parseBoolean(res.getValor()));
 				}
 			}
+			else 
+				throw new ParsingException("La condicion debe ser booleana ");
 		}			
 			
 		return null;

@@ -26,7 +26,7 @@ public class Main {
 			Scope Variables = new Scope();
 			Map<String,FuncionDef> Funciones = new HashMap<String,FuncionDef>();
 			
-			Ejecutar.ejecutar(Sentencias, Variables, Funciones);
+			Ejecutar.ejecutar(Sentencias, Variables, Funciones, false);
 			
 		} 
 		catch (FileNotFoundException e) {

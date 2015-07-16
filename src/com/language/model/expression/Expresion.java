@@ -51,7 +51,7 @@ public class Expresion extends Sentencia {
 		}
 	}
 
-	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> Funciones){
+	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> Funciones, boolean loop){
 		
 		Resultado ret = null;
 		
@@ -88,7 +88,7 @@ public class Expresion extends Sentencia {
 		else if(this.tipo == TipoExpresion.LIST || this.tipo == TipoExpresion.TUPLA){
 			ArrayList<Resultado> arg = new ArrayList<Resultado>();
 			for (Expresion a : this.arguments){
-				arg.add(a.ejecutar(variables, Funciones));
+				arg.add(a.ejecutar(variables, Funciones, loop));
 			}
 			if (this.tipo == TipoExpresion.LIST)
 				ret = new Resultado(arg, TipoResultado.LIST);
@@ -99,7 +99,7 @@ public class Expresion extends Sentencia {
 		//UNARIAS
 		
 		else if (this.tipo == TipoExpresion.UNARIA){
-			Resultado arg = this.arguments.get(0).ejecutar(variables, Funciones);
+			Resultado arg = this.arguments.get(0).ejecutar(variables, Funciones, loop);
 					
 			if (this.value.toString() == "not"){
 				if (arg.getTipo() == TipoResultado.BOOL)
@@ -138,8 +138,8 @@ public class Expresion extends Sentencia {
 		//BINARIAS
 		
 		else if (this.tipo == TipoExpresion.BINARIA){
-			Resultado arg1 = this.arguments.get(0).ejecutar(variables, Funciones);
-			Resultado arg2 = this.arguments.get(1).ejecutar(variables, Funciones);
+			Resultado arg1 = this.arguments.get(0).ejecutar(variables, Funciones, loop);
+			Resultado arg2 = this.arguments.get(1).ejecutar(variables, Funciones, loop);
 			
 			//BOOLEANAS
 			

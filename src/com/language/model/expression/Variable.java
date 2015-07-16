@@ -16,8 +16,8 @@ public class Variable extends Sentencia {
 		this.argument = argument;	
 	}
 	
-	public Resultado ejecutar (Scope variables, Map<String,FuncionDef> Funciones){
-		return this.argument.ejecutar(variables, Funciones);
+	public Resultado ejecutar (Scope variables, Map<String,FuncionDef> Funciones, boolean loop){
+		return this.argument.ejecutar(variables, Funciones, loop);
 	}
 	
 	public String getValor(){

@@ -17,7 +17,7 @@ public class FuncionDef extends Sentencia {
 		this.sentencias = sentencias;
 	}
 
-	public Resultado ejecutar(Scope variables, Map<String, FuncionDef> Funciones) {
+	public Resultado ejecutar(Scope variables, Map<String, FuncionDef> Funciones, boolean loop) {
 		return null;
 	}
 

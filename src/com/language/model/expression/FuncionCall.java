@@ -20,7 +20,7 @@ public class FuncionCall extends Sentencia {
 		this.col=col;
 	}
 
-	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> funciones) {
+	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> funciones, boolean loop) {
 
 		Resultado ret = null;
 		
@@ -47,7 +47,7 @@ public class FuncionCall extends Sentencia {
 				//Recorro la lista de parametros y los agrego como variables de scope
 				for (Expresion parm : this.parametros){
 					
-					Resultado r = parm.ejecutar(variables, funciones);
+					Resultado r = parm.ejecutar(variables, funciones, false);
 					
 					//Si es del tipo lista lo agrego a la lista de parametros por referencia
 					if (parm.getTipo() == TipoExpresion.ID && r.getTipo() == TipoResultado.LIST){

@@ -8,7 +8,7 @@ import com.language.model.expression.*;
 
 public class Ejecutar {
 	
-	public static Resultado ejecutar(ArrayList<Sentencia> Sentencias, Scope Variables, Map<String,FuncionDef> Funciones){
+	public static Resultado ejecutar(ArrayList<Sentencia> Sentencias, Scope Variables, Map<String,FuncionDef> Funciones, boolean loop){
 		
 		Resultado ret = null;
 		
@@ -17,21 +17,21 @@ public class Ejecutar {
 			//Asignacion de variables
 			if (stmt instanceof Variable){
 				if (Variables.containsKeyScopeLocal(stmt.getValor())){
-					Variables.replaceScopeLocal(stmt.getValor(), stmt.ejecutar(Variables, Funciones));
+					Variables.replaceScopeLocal(stmt.getValor(), stmt.ejecutar(Variables, Funciones, loop));
 				}
 				else {
-					Variables.putScopeLocal(stmt.getValor(), stmt.ejecutar(Variables, Funciones));
+					Variables.putScopeLocal(stmt.getValor(), stmt.ejecutar(Variables, Funciones, loop));
 				}
 			}
 			
 			//Funciones predefinidas
 			else if (stmt instanceof FuncionesPredefinidas){
-				stmt.ejecutar(Variables, Funciones);
+				stmt.ejecutar(Variables, Funciones, loop);
 			}
 			
 			//Funciones del usuario
 			else if (stmt instanceof FuncionCall){
-				stmt.ejecutar(Variables, Funciones);
+				stmt.ejecutar(Variables, Funciones, loop);
 			}
 			
 			//Funciones del usuario
@@ -43,16 +43,34 @@ public class Ejecutar {
 					throw new ParsingException("Ya existe una funcion con el nombre " + stmt.getValor());
 			}		
 			else if (stmt instanceof If){
-				stmt.ejecutar(Variables, Funciones);
+				ret = stmt.ejecutar(Variables, Funciones, loop);
+				if (ret != null)
+					return ret;
 			}
 			else if (stmt instanceof While){
-				stmt.ejecutar(Variables, Funciones);
+				ret = stmt.ejecutar(Variables, Funciones, loop);
+				if (ret != null)
+					return ret;
 			}
 			else if (stmt instanceof For){
-				stmt.ejecutar(Variables, Funciones);
+				ret = stmt.ejecutar(Variables, Funciones, loop);
+				if (ret != null)
+					return ret;			
 			}
+			
+			//Si leo un return corto con la ejecucion y devuelvo una lista de valores  
 			else if (stmt instanceof Return){
-				return stmt.ejecutar(Variables, Funciones);
+				return stmt.ejecutar(Variables, Funciones, loop);
+			}
+			
+			//si leo un continue corto la ejecucion y devuelvo un Resultado continue
+			else if (stmt instanceof Continue){
+				return stmt.ejecutar(Variables, Funciones, loop);
+			}
+			
+			//si leo un continue corto la ejecucion y devuelvo un Resultado break
+			else if (stmt instanceof Break){
+				return stmt.ejecutar(Variables, Funciones, loop);
 			}
 		}
 		return ret;

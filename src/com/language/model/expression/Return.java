@@ -26,12 +26,12 @@ public class Return extends Sentencia {
 		this.col = col;
 	}
 	
-	public Resultado ejecutar(Scope variables, Map<String, FuncionDef> Funciones) {
+	public Resultado ejecutar(Scope variables, Map<String, FuncionDef> Funciones, boolean loop) {
 		if (this.arguments.isEmpty())
 			return new Resultado ("None", TipoResultado.NONE);
 		ArrayList <Resultado> a = new ArrayList <Resultado>();
 		for (Expresion e : this.arguments){
-			a.add(e.ejecutar(variables, Funciones));
+			a.add(e.ejecutar(variables, Funciones, loop));
 		}
 		return new Resultado (a,TipoResultado.LIST);
 	}

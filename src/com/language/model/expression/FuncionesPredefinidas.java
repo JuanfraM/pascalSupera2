@@ -34,12 +34,12 @@ public class FuncionesPredefinidas extends Sentencia {
 		this.arguments.add(arg2);
 	}
 
-	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> Funciones) {
+	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> Funciones, boolean loop) {
 		Resultado ret = null;
 		
 		if (this.value == "print"){
 			ret = new Resultado("True", TipoResultado.BOOL);
-			System.out.println(this.arguments.get(0).ejecutar(variables, Funciones).toString());
+			System.out.println(this.arguments.get(0).ejecutar(variables, Funciones, loop).toString());
 		}
 
 		return ret;

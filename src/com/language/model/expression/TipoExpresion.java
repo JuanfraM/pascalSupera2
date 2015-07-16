@@ -13,4 +13,7 @@ public enum TipoExpresion {
 	TUPLA,
 	NONE,
 	FUNCTION_PREDEF,
+	BREAK,
+	RETURN,
+	CONTINUE
 }

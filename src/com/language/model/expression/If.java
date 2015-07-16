@@ -67,8 +67,8 @@ public class If extends Sentencia{
 	}
 
 	@Override
-	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> Funciones) throws ParsingException {	
-		Resultado res = condicion.ejecutar(variables, Funciones);	
+	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> Funciones, boolean loop) throws ParsingException {	
+		Resultado res = condicion.ejecutar(variables, Funciones, loop);	
 		if(res.getTipo() == TipoResultado.BOOL){			
 			ArrayList<Sentencia> suite = null;
 			boolean ejecuta =  true;
@@ -86,7 +86,7 @@ public class If extends Sentencia{
 				ejecuta = false;
 			}
 			if(ejecuta){
-				Ejecutar.ejecutar(suite, variables, Funciones);
+				Ejecutar.ejecutar(suite, variables, Funciones, loop);
 			}
 		/** ERROR SEMANTICO */
 		}else{											//IF_EXP
