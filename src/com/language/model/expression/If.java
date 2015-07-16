@@ -15,20 +15,26 @@ public class If extends Sentencia{
 	private ArrayList<Sentencia> sentencias;
 	private ArrayList<Sentencia> sentenciasElse;
 	private boolean hayElse;
+	private int linea, columna;
+	private String lugar;
 	
-	public If(Expresion condicion, ArrayList<Sentencia> sentencias) {
+	public If(Expresion condicion, ArrayList<Sentencia> sentencias,int columna,int linea) {
 		super();
 		this.condicion = condicion;
 		this.sentencias = sentencias;
 		this.hayElse =false;
+		this.columna = columna;
+		this.lugar = " en la linea "+linea+" y columna "+columna;
 	}
 	
-	public If(Expresion condicion, ArrayList<Sentencia> sentencias, ArrayList<Sentencia> sentenciasElse ){
+	public If(Expresion condicion, ArrayList<Sentencia> sentencias, ArrayList<Sentencia> sentenciasElse,int columna,int linea ){
 		super();
 		this.condicion = condicion;
 		this.sentencias = sentencias;
 		this.sentenciasElse = sentenciasElse;
 		this.hayElse = true;
+		this.columna = columna;
+		this.lugar = " en la linea "+linea+" y columna "+columna;
 	}
 
 	public Expresion getCondicion() {
@@ -93,7 +99,7 @@ public class If extends Sentencia{
 			}
 		/** ERROR SEMANTICO */
 		}else{											//IF_EXP
-			throw new ParsingException(ParsingException.ERROR);
+			throw new ParsingException(ParsingException.ERROR+this.lugar);
 		}
 		return null;
 	}

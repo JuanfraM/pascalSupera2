@@ -11,7 +11,7 @@ public class Variable extends Sentencia {
 	private Object id; 
 	private Sentencia argument;
 	
-	public Variable(Object id, Expresion argument){
+	public Variable(Object id, Sentencia argument){
 		this.id = id;
 		this.argument = argument;	
 	}
