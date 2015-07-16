@@ -45,6 +45,7 @@ public class While extends Sentencia{
 							return null;
 						if (eje.getTipo() == TipoResultado.RETURN)
 							return eje;
+						
 					}
 					res = this.condicion.ejecutar(variables, Funciones, loop);
 					bandera = (Boolean.parseBoolean(res.getValor()));
