@@ -19,13 +19,13 @@ public class FuncionCall extends Sentencia {
 		this.col=col;
 	}
 
-	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> Funciones) {
+	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> funciones) {
 
-		if (Funciones.containsKey(this.value)){
+		if (funciones.containsKey(this.value)){
 			
-			FuncionDef definicion = Funciones.get(this.value);
+			FuncionDef definicion = funciones.get(this.value);
 			
-			if (this.parametros.size() == definicion.getParametros().size()){
+			if (this.parametros.size() == definicion.getParametros().size()){				
 				
 			}
 			else 
