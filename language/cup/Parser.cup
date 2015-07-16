@@ -85,7 +85,7 @@ if_stmt ::=   IF expression:pe DOSPUNTOS suite:su {: RESULT = new If(pe,su);:}
             | IF expression:pe DOSPUNTOS suite:su ELSE DOSPUNTOS suite:su2 {: RESULT = new If(pe,su,su2);:}
             ;
 
-suite ::= TAB suite_statment:s NOTAB {: RESULT = s; :}
+suite ::= NEWLINE TAB suite_statment:s NOTAB {: RESULT = s; :}
           ;
 
 suite_statment ::= suite_statment:ss statment:s {: ss.add(s); RESULT = ss; :}
@@ -126,7 +126,8 @@ not_test ::=    comparison:c {: RESULT = c; :}
 comparison ::=   or_expr:o {: RESULT = o; :}
                      | comparison:c OPBMENOR:o or_expr:or {: RESULT = new Expresion("<",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
                      | comparison:c OPBMAYOR:o or_expr:or {: RESULT = new Expresion(">",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
-                     | comparison:c OPBIGUAL:o or_expr:or {: RESULT = new Expresion("!=",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+                     | comparison:c OPBIGUAL:o or_expr:or {: RESULT = new Expresion("==",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+                     | comparison:c OPBDISTINTO:o or_expr:or {: RESULT = new Expresion("!=",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
                      ;
 
 //Expresiones arigmeticas bit a bit
@@ -227,7 +228,7 @@ funcdef ::= DEF ID:id LPAREN expression_list:el RPAREN DOSPUNTOS suite:s {:
                         RESULT = new FuncionDef(id, parametros, s);:}
 
             | DEF ID:id LPAREN  RPAREN DOSPUNTOS suite:s {:
-                          ArrayList<String> parametros = new AWrrayList<String> ();
+                          ArrayList<String> parametros = new ArrayList<String> ();
                           RESULT = new FuncionDef(id, parametros, s);:}
              ;
 

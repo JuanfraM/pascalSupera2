@@ -19,6 +19,7 @@ import com.language.model.expression.*;
 
 	int tabs = 0;
 	int tabsAnterior = 0;
+	boolean salto = false;
 
 	public Scanner(java.io.InputStream r, SymbolFactory sf) {
 		this(r);
@@ -35,6 +36,11 @@ import com.language.model.expression.*;
 %}
 
 %eofval{
+        if (!salto){
+        	System.out.println("NEWLINE");
+        	salto = true;
+            return symbol(sym.NEWLINE);
+        }
         if (tabsAnterior>0){
             tabsAnterior--;
             System.out.println("NOTAB");
@@ -153,10 +159,20 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 
 	{FloatLiteral} 		{ System.out.println("FLOAT: " + yytext()); return symbol(sym.FLOAT, yytext()); }
 
-	{LineTerminator}/[\t]					{ tabs = 0; yybegin(TAB); }
+	{LineTerminator}/[\t]					{ 	tabs = 0; 
+												yybegin(TAB); 
+												System.out.println("NEWLINE"); 
+												return symbol(sym.NEWLINE);
+											}
 
 	{LineTerminator}/[a-zA-Z0-9]			{
 												tabs = 0;
+												if (!salto){
+													yypushback(1);
+													salto = true;	
+													System.out.println("NEWLINE"); 
+													return symbol(sym.NEWLINE);
+												}
 												if (tabs < tabsAnterior) {
 													yypushback(1);
 													tabsAnterior--;
@@ -165,7 +181,11 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 												}
 												else if (tabs > tabsAnterior){
 													tabsAnterior = tabs;
-													System.out.println("TAB"); return symbol(sym.TAB);
+													System.out.println("TAB"); 
+													return symbol(sym.TAB);
+												}
+												else {
+													salto = false;
 												}
 											}
 
@@ -272,7 +292,6 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 											tabsAnterior = tabs;
 											System.out.println("TAB"); return symbol(sym.TAB);
 										}
-
 									}
 
 	\t/[ \r\n(\r\n)\f]				{ yybegin(YYINITIAL); }
