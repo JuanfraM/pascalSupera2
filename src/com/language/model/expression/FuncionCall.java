@@ -60,7 +60,7 @@ public class FuncionCall extends Sentencia {
 				}
 				
 				ret = Ejecutar.ejecutar(sentencias, variables, funciones, false);
-				//for ()
+				//for () s
 				
 				
 			}
