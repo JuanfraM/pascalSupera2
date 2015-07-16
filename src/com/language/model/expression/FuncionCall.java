@@ -14,9 +14,9 @@ public class FuncionCall extends Sentencia {
 	private ArrayList<Expresion> parametros;
 	private int linea, col;
 	
-	public FuncionCall (Object value, ArrayList<Expresion> parametros, int linea, int col){
+	public FuncionCall(Object value, ArrayList<Expresion> arguments,  int linea, int col) {
 		this.value = value;
-		this.parametros = parametros;
+		this.parametros = arguments;
 		this.linea=linea;
 		this.col=col;
 	}
@@ -60,9 +60,16 @@ public class FuncionCall extends Sentencia {
 				}
 				
 				ret = Ejecutar.ejecutar(sentencias, variables, funciones, false);
+				
+				Map<String,Resultado> scopeViejo = variables.removeScope();
 				for (String s : variablesRef.keySet()){
-					
+					Resultado valorRef = scopeViejo.get(s);
+					String variableRef = variablesRef.get(s);
+					if (variables.containsKeyScopeLocal(variableRef))
+						variables.replaceScopeLocal(variableRef, valorRef);
 				}
+				
+				return ret;
 				
 				
 			}
@@ -72,11 +79,7 @@ public class FuncionCall extends Sentencia {
 		}
 		else 
 			throw new ParsingException("La funcion " + this.value.toString() + "no esta denfida en la posicion" + this.linea + " " + this.col);
-		
-		
-		
-		
-		return ret;
+
 	}
 
 

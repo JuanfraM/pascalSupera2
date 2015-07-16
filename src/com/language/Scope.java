@@ -21,8 +21,8 @@ public class Scope {
 		this.scope.push(m);
 	}
 	
-	public void removeScope(){
-		this.scope.pop();
+	public Map<String,Resultado> removeScope(){
+		return this.scope.pop();
 	}
 	
 	//SOBRE EL SCOPE LOCAL
