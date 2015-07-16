@@ -12,15 +12,15 @@ public class Return extends Sentencia {
 	private int linea, col;
 	
 	
-	public Return (Object value, ArrayList<Expresion> arguments, int linea, int col){
-		this.value = value;
+	public Return (ArrayList<Expresion> arguments, int linea, int col){
+		this.value = "return";
 		this.arguments = arguments;
 		this.linea = linea;
 		this.col = col;
 	}
 	
-	public Return (Object value, int linea, int col){
-		this.value = value;
+	public Return (int linea, int col){
+		this.value = "return";
 		this.arguments = new ArrayList<Expresion>();
 		this.linea = linea;
 		this.col = col;

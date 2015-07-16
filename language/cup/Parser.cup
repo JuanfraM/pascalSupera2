@@ -49,7 +49,7 @@ terminal NEWLINE;
 
 non terminal ArrayList<Sentencia> program;
 non terminal ArrayList<Expresion> expression_list;
-non terminal Sentencia statment,simple_stmt,compound_stmt,if_stmt,for_stmt,while_stmt;
+non terminal Sentencia statment,simple_stmt,compound_stmt,if_stmt,for_stmt,while_stmt,return_stmt;
 non terminal ArrayList<Sentencia> suite, suite_statment;
 non terminal Variable  assignment_stmt;
 non terminal Expresion list_display,atom, literal, power, primary;
@@ -111,7 +111,14 @@ simple_stmt ::=   expression_stmt:e {: RESULT = e;:}
                 | assignment_stmt:a {: RESULT = a;:}
                 | print_stmt:p PUNTOYCOMA {: RESULT = p;:}
                 | print_stmt:p {: RESULT = p;:}
+				| BREAK: f {:RESULT = new Break(fleft+1,fright+1);:}
+				| CONTINUE: f {:RESULT = new Continue (fleft+1,fright+1);:}
+				| return_stmt:r {:RESULT = r;:}
                 ;
+				
+return_stmt ::= RETURN:r {: new Return (rleft+1,rright+1); :}
+				| RETURN:r expression_list:e {: new Return (e,rleft+1,rright+1); :}
+				;
 
 //Originalmente era expression_list
 assignment_stmt ::=   ID:i ASIG:a expression:e {: RESULT = new Variable(i,e); :}
@@ -139,6 +146,8 @@ not_test ::=    comparison:c {: RESULT = c; :}
 comparison ::=   or_expr:o {: RESULT = o; :}
                      | comparison:c OPBMENOR:o or_expr:or {: RESULT = new Expresion("<",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
                      | comparison:c OPBMAYOR:o or_expr:or {: RESULT = new Expresion(">",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+					 | comparison:c OPBMENORIGUAL:o or_expr:or {: RESULT = new Expresion("<=",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
+                     | comparison:c OPBMAYORIGUAL:o or_expr:or {: RESULT = new Expresion(">=",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
                      | comparison:c OPBIGUAL:o or_expr:or {: RESULT = new Expresion("==",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
                      | comparison:c OPBDISTINTO:o or_expr:or {: RESULT = new Expresion("!=",c,or,TipoExpresion.BINARIA,oleft+1,oright+1); :}
                      ;
@@ -223,7 +232,7 @@ literal ::=   STRING: s {:RESULT = new Expresion(s,TipoExpresion.STRING,sleft+1,
             | FLOAT: d {:RESULT = new Expresion(d,TipoExpresion.FLOAT,dleft+1,dright+1);:}
             | TRUE: t {:RESULT = new Expresion(t,TipoExpresion.BOOL,tleft+1,tright+1);:}
             | FALSE: f {:RESULT = new Expresion(f,TipoExpresion.BOOL,fleft+1,fright+1);:}
-      | NONE: n {:RESULT = new Expresion(n,TipoExpresion.NONE,nleft+1,nright+1);:}
+			| NONE: n {:RESULT = new Expresion(n,TipoExpresion.NONE,nleft+1,nright+1);:}
             ;
 
 print_stmt ::= PRINT expression:e {:RESULT = new FuncionesPredefinidas("print", e, eleft+1,eright+1);:}
