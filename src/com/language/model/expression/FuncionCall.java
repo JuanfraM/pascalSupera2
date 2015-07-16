@@ -31,11 +31,11 @@ public class FuncionCall extends Sentencia {
 			
 			//Obtengo los parametros y las sentencias de la funcion
 			FuncionDef definicion = funciones.get(this.value);
-			ArrayList<String> parametros = definicion.getParametros();
+			ArrayList<String> parametrosDef = definicion.getParametros();
 			ArrayList<Sentencia> sentencias = definicion.getSentencias();
 			
 			//Valido que me esten llegando la cantidad de parametros correcta
-			if (this.parametros.size() == definicion.getParametros().size()){
+			if (this.parametros.size() == parametrosDef.size()){
 				
 				//Creo el scope de ejecucion de la funcion
 				variables.addScope();
@@ -52,15 +52,17 @@ public class FuncionCall extends Sentencia {
 					
 					//Si es del tipo lista lo agrego a la lista de parametros por referencia
 					if (parm.getTipo() == TipoExpresion.ID && r.getTipo() == TipoResultado.LIST){
-						variablesRef.put(parametros.get(i), parm.getValor());
+						variablesRef.put(parametrosDef.get(i), parm.getValor());
 					}
 					
 					//Agrego las variables al scope
-					variables.putScopeLocal(parametros.get(i), r);		
+					variables.putScopeLocal(parametrosDef.get(i), r);		
 				}
 				
 				ret = Ejecutar.ejecutar(sentencias, variables, funciones, false);
-				//for () s
+				for (String s : variablesRef.keySet()){
+					
+				}
 				
 				
 			}

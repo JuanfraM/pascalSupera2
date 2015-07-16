@@ -12,6 +12,10 @@ public class ParsingException extends RuntimeException {
 		super(message, cause);
 	}
 
+	public ParsingException(String columna, String fila, String error) {
+		super("Error en la columna: " + columna + " fila: " + fila + " - " + error);
+	}
+	
 	public ParsingException(String message) {
 		super(message);
 	}
