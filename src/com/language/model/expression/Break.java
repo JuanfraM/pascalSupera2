@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import com.language.Scope;
+import com.language.exceptions.ParsingException;
 
 public class Break extends Sentencia {
 
@@ -19,6 +20,8 @@ public class Break extends Sentencia {
 	}
 
 	public Resultado ejecutar(Scope variables, Map<String, FuncionDef> Funciones, boolean loop) {
+		if (!loop)
+			throw new ParsingException("La expresion break solo se puede usar en un loop "+ this.linea + " " + this.col);
 		return new Resultado(value.toString(),TipoResultado.BREAK);
 	}
 

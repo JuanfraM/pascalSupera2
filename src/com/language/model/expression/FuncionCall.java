@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.language.Ejecutar;
 import com.language.Scope;
 import com.language.exceptions.ParsingException;
 
@@ -58,6 +59,8 @@ public class FuncionCall extends Sentencia {
 					variables.putScopeLocal(parametros.get(i), r);		
 				}
 				
+				ret = Ejecutar.ejecutar(sentencias, variables, funciones, false);
+				//for ()
 				
 				
 			}
