@@ -38,7 +38,14 @@ public class While extends Sentencia{
 			if(res.getTipo() == TipoResultado.BOOL){	
 				bandera = (Boolean.parseBoolean(res.getValor()));
 				while(bandera){
-					Ejecutar.ejecutar(this.sentencias, variables, Funciones, true);
+					Resultado eje = Ejecutar.ejecutar(this.sentencias, variables, Funciones, true);
+					//Verifico que no haya llegado a un break return
+					if (eje != null){
+						if (eje.getTipo() == TipoResultado.BREAK)
+							return null;
+						if (eje.getTipo() == TipoResultado.RETURN)
+							return eje;
+					}
 					res = this.condicion.ejecutar(variables, Funciones, loop);
 					bandera = (Boolean.parseBoolean(res.getValor()));
 				}

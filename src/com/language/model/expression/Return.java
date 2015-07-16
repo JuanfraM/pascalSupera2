@@ -33,7 +33,7 @@ public class Return extends Sentencia {
 		for (Expresion e : this.arguments){
 			a.add(e.ejecutar(variables, Funciones, loop));
 		}
-		return new Resultado (a,TipoResultado.LIST);
+		return new Resultado (a,TipoResultado.RETURN);
 	}
 
 	public String getValor() {
