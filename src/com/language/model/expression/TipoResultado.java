@@ -10,5 +10,6 @@ public enum TipoResultado {
 	TUPLA,
 	NONE,
 	CONTINUE,
-	BREAK
+	BREAK,
+	RETURN
 }
