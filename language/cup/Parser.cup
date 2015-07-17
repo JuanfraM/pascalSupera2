@@ -117,8 +117,8 @@ simple_stmt ::=   expression_stmt:e {: RESULT = e;:}
 				| return_stmt:r {:RESULT = r;:}
                 ;
 				
-return_stmt ::= RETURN:r {: new Return (rleft+1,rright+1); :}
-				| RETURN:r expression_list:e {: new Return (e,rleft+1,rright+1); :}
+return_stmt ::= RETURN:r {: RESULT = new Return (rleft+1,rright+1); :}
+				| RETURN:r expression_list:e {: RESULT = new Return (e,rleft+1,rright+1); :}
 				;
 
 //Originalmente era expression_list
