@@ -20,6 +20,11 @@ public class ParsingException extends RuntimeException {
 	public static final String FUNC_PREDEF_SPLIT2 = "debe ingresar un parametro string;";
 	public static final String FUNC_PREDEF_POP1 = "la funcion debe aplicarse a un diccionario o una lista";
 	public static final String FUNC_PREDEF_POP2 = "debe ingresar un parametro entero";
+	public static final String FUNC_PREDEF_TYPE = "error en la funcion type, no es un tipo valido";
+	public static final String FUNC_PREDEF_STR = "error en la conversion de tipo a string";
+	public static final String FUNC_PREDEF_INT1 = "error en la conversion de tipo a int, debe ingresar un strig con valor entero";
+	public static final String FUNC_PREDEF_INT2 = "error en la conversion de tipo a int";
+	
 	
 	
 	public ParsingException(String message, Throwable cause) {

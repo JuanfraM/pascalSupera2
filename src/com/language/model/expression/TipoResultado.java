@@ -13,5 +13,6 @@ public enum TipoResultado {
 	BREAK,
 	RETURN,
 	DATA_DICT,
-	DICT
+	DICT,
+	TYPE
 }

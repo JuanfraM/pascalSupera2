@@ -137,6 +137,7 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 
 	print				{ System.out.println("FUNCION"); return symbol(sym.PRINT, "print"); }
 	raw_input			{ System.out.println("RAW_INPUT"); return symbol(sym.RAW_INPUT, "raw_input"); }
+	type				{ System.out.println("TYPE"); return symbol(sym.TYPE, "type"); }
 	int					{ System.out.println("FUNCION"); return symbol(sym.FUNCION, "int"); }
 	float				{ System.out.println("FUNCION"); return symbol(sym.FUNCION, "float"); }
 	str					{ System.out.println("FUNCION"); return symbol(sym.FUNCION, "str"); }

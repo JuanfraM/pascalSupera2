@@ -83,7 +83,142 @@ public class FuncionesPredefinidas extends Expresion {
 	        entrada = entradaEscaner.nextLine (); //Invocamos un método sobre un objeto Scanner
 			entradaEscaner.close();
 			ret = new Resultado(entrada,TipoResultado.STRING);
+		}//devuelve el tipo de dato ingresado
+		else if (this.value == "type"){			
+			
+			Expresion e = (Expresion) this.arguments.get(0);
+			Resultado aux = e.ejecutar(variables, Funciones, loop);
+			String resultado;
+			switch (aux.getTipo()){
+			
+				case INTEGER:
+					resultado = "<type 'int'>";
+					ret = new Resultado(resultado, TipoResultado.TYPE);
+					break;
+				case FLOAT:
+					resultado = "<type 'float'>";
+					ret = new Resultado(resultado, TipoResultado.TYPE);
+					break;
+				case LONG:
+					resultado = "<type 'long'>";
+					ret = new Resultado(resultado, TipoResultado.TYPE);
+					break;
+				case STRING:
+					resultado = "<type 'string'>";
+					ret = new Resultado(resultado, TipoResultado.TYPE);
+					break;
+				case TUPLA:
+					resultado = "<type 'tupla'>";
+					ret = new Resultado(resultado, TipoResultado.TYPE);
+					break;
+				case LIST:
+					resultado = "<type 'list'>";
+					ret = new Resultado(resultado, TipoResultado.TYPE);
+					break;
+				case BOOL:
+					resultado = "<type 'bool'>";
+					ret = new Resultado(resultado, TipoResultado.TYPE);
+					break;
+				case DICT:
+					resultado = "<type 'diccionario'>";
+					ret = new Resultado(resultado, TipoResultado.TYPE);
+					break;
+				default:
+					throw new ParsingException(ParsingException.FUNC_PREDEF_TYPE+this.lugar);
+					
+			}
+		}//str(X) convierte el valor X a string
+		else if (this.value == "str"){			
+			
+			Expresion e = (Expresion) this.arguments.get(0);
+			Resultado aux = e.ejecutar(variables, Funciones, loop);
+			
+			String resultado;
+			switch (aux.getTipo()){
+			
+				case INTEGER:
+					resultado = aux.getValor();
+					ret = new Resultado(resultado, TipoResultado.STRING);
+					break;
+				case FLOAT:
+					resultado = aux.getValor();
+					ret = new Resultado(resultado, TipoResultado.STRING);
+					break;
+				case LONG:
+					resultado = aux.getValor();
+					ret = new Resultado(resultado, TipoResultado.STRING);
+					break;
+				case STRING:
+					resultado = aux.getValor();
+					ret = new Resultado(resultado, TipoResultado.STRING);
+					break;
+				case TUPLA:
+					resultado = aux.toString();
+					ret = new Resultado(resultado, TipoResultado.STRING);
+					break;
+				case LIST:
+					resultado = aux.toString();
+					ret = new Resultado(resultado, TipoResultado.STRING);
+					break;
+				case BOOL:
+					resultado = aux.getValor();
+					ret = new Resultado(resultado, TipoResultado.STRING);
+					break;
+				case DICT:
+					resultado = aux.toString();
+					ret = new Resultado(resultado, TipoResultado.STRING);
+					break;
+				default:
+					throw new ParsingException(ParsingException.FUNC_PREDEF_STR+this.lugar);
+					
+			}
 		}
+		//int(X) convierte el valor X a int
+				else if (this.value == "int"){			
+					
+					Expresion e = (Expresion) this.arguments.get(0);
+					Resultado aux = e.ejecutar(variables, Funciones, loop);
+					Integer i;
+					String resultado;
+					switch (aux.getTipo()){
+					
+						case INTEGER:
+							resultado = aux.getValor();
+							ret = new Resultado(resultado, TipoResultado.INTEGER);
+							break;
+						case FLOAT:
+							resultado = aux.getValor();
+							Float f = Float.valueOf(resultado);
+							i = f.intValue();
+							ret = new Resultado(i.toString(), TipoResultado.INTEGER);
+							break;
+						case LONG:
+							resultado = aux.getValor();
+							Long l = Long.valueOf(resultado);
+							i = l.intValue();
+							ret = new Resultado(i.toString(), TipoResultado.INTEGER);
+							break;
+						case STRING:
+							resultado = aux.getValor();
+							try {i = Integer.valueOf(resultado);}
+							catch(NumberFormatException p){
+								throw new ParsingException(ParsingException.FUNC_PREDEF_INT1+this.lugar);
+							}
+							ret = new Resultado(resultado, TipoResultado.INTEGER);
+							break;						
+						case BOOL:
+							resultado = aux.getValor();
+							if(resultado.equals("True"))
+								resultado = "1";
+							else
+								resultado="0";
+							ret = new Resultado(resultado, TipoResultado.INTEGER);
+							break;						
+						default:
+							throw new ParsingException(ParsingException.FUNC_PREDEF_INT2+this.lugar);
+							
+					}
+				}
 		else if(this.value=="length"){
 			Resultado variable = variables.get(this.id_variable.toString());
 			if((variable.getTipo()==TipoResultado.STRING)&&this.arguments.size()==0){	
