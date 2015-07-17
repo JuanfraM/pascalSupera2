@@ -263,5 +263,9 @@ funcdef ::= DEF ID:id LPAREN expression_list:el RPAREN DOSPUNTOS suite:s {:
                           RESULT = new FuncionDef(id, parametros, s);:}
              ;
 
-call ::=  ID:id parenth_form:p {:RESULT = new FuncionCall(id,p.getArguments(),idleft+1,idright+1);:}
+call ::=  ID:id parenth_form:p 	{: 	if (p.getTipo() == TipoExpresion.TUPLA )
+										RESULT = new FuncionCall(id,p.getArguments(),idleft+1,idright+1);
+									else 
+										RESULT = new FuncionCall(id,p,idleft+1,idright+1);
+								:}
         ;

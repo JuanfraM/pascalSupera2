@@ -14,6 +14,15 @@ public class FuncionCall extends Expresion {
 	private ArrayList<Expresion> parametros;
 	private int linea, col;
 	
+	public FuncionCall(Object value, Expresion argument,  int linea, int col) {
+		super(value, argument, TipoExpresion.FUNCION, col, col); 
+		this.value = value;
+		this.parametros = new ArrayList<Expresion>();
+		parametros.add(argument);
+		this.linea=linea;
+		this.col=col;
+	}
+	
 	public FuncionCall(Object value, ArrayList<Expresion> arguments,  int linea, int col) {
 		super(value, arguments, TipoExpresion.FUNCION, col, col); 
 		this.value = value;
@@ -70,7 +79,8 @@ public class FuncionCall extends Expresion {
 					if (variables.containsKeyScopeLocal(variableRef))
 						variables.replaceScopeLocal(variableRef, valorRef);
 				}
-				
+				if (ret == null)
+					return new Resultado("None", TipoResultado.NONE);
 				return ret;
 				
 				
@@ -80,7 +90,7 @@ public class FuncionCall extends Expresion {
 			
 		}
 		else 
-			throw new ParsingException("La funcion " + this.value.toString() + "no esta denfida en la posicion" + this.linea + " " + this.col);
+			throw new ParsingException("La funcion " + this.value.toString() + " no esta denfida en la posicion " + this.linea + " " + this.col);
 
 	}
 

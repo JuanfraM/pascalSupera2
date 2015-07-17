@@ -113,6 +113,7 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 	while				{ System.out.println("WHILE"); return symbol(sym.WHILE, "while"); }
 	break				{ System.out.println("BREAK"); return symbol(sym.BREAK, "break"); }
 	continue			{ System.out.println("CONTINUE"); return symbol(sym.CONTINUE, "continue"); }
+	return				{ System.out.println("RETURN"); return symbol(sym.RETURN, "return"); }
 	for					{ System.out.println("FOR"); return symbol(sym.FOR, "for"); }
 	def					{ System.out.println("DEF"); return symbol(sym.DEF, "def"); }
 	in					{ System.out.println("IN"); return symbol(sym.IN, "in"); }
