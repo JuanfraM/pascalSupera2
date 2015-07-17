@@ -124,15 +124,9 @@ return_stmt ::= RETURN:r {: RESULT = new Return (rleft+1,rright+1); :}
 				;
 
 //Originalmente era expression_list
-assignment_stmt ::=   assignment_ids:i ASIG:a expression:e {: RESULT = new Variable (i,e, aleft+1, aright+1); :}
-                    | assignment_ids:i ASIG:a raw_input:r {: RESULT = new Variable (i,r, aleft+1, aright+1); :}
-					| ID:i LCORCHETE val_corchete:v RCORCHETE ASIG expression 	{:
-																					ArrayList<Expresion> a = new ArrayList<Expresion>();
-																					Expresion id = new Expresion(i,TipoExpresion.ID,ileft+1,iright+1);
-																					a.add(id);
-																					a.add(v);
-																					RESULT = new FuncionesPredefinidas("set",a,ileft+1,iright+1);
-																				:}
+assignment_stmt ::=   assignment_ids:i ASIG:a expression:e {: RESULT = new Variable (i,e, aleft+1, aright+1,false); :}
+                    | assignment_ids:i ASIG:a raw_input:r {: RESULT = new Variable (i,r, aleft+1, aright+1,false); :}
+					| ID:i LCORCHETE val_corchete:v RCORCHETE ASIG:a expression:e 	{: RESULT = new Variable (i,v,e,aleft+1, aright+1,true); :}
                     ;
 					
 assignment_ids ::= ID:i {: 

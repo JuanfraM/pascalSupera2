@@ -519,24 +519,6 @@ public class FuncionesPredefinidas extends Expresion {
 				throw new ParsingException(ParsingException.FUNC_PREDEF_GET1+this.lugar);
 			}
 		}
-		
-		else if(this.value=="set"){
-			if (this.arguments.size() != 2)
-				throw new ParsingException(ParsingException.FUNC_PREDEF_SET2+this.lugar);
-			Resultado var = this.arguments.get(0).ejecutar(variables, Funciones, loop);
-			Resultado arg = this.arguments.get(1).ejecutar(variables, Funciones, loop);
-			if (var.getTipo() == TipoResultado.LIST){
-				if (arg.getTipo() != TipoResultado.INTEGER)
-					throw new ParsingException(ParsingException.FUNC_PREDEF_SET3+this.lugar);
-			}
-			else if (var.getTipo() == TipoResultado.DICT){
-				if (arg.getTipo() != TipoResultado.STRING)
-					throw new ParsingException(ParsingException.FUNC_PREDEF_SET3+this.lugar);
-			}
-			else{
-				throw new ParsingException(ParsingException.FUNC_PREDEF_SET1+this.lugar);
-			}
-		}
 
 		return ret;
 	}
