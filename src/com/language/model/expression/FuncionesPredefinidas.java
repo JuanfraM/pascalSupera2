@@ -117,7 +117,7 @@ public class FuncionesPredefinidas extends Expresion {
 				String largo = Integer.toString(count);
 				ret = new Resultado(largo,TipoResultado.INTEGER);
 			}
-			else {
+			else { 
 				throw new ParsingException(ParsingException.ERROR_FUNC_PREDEF1+this.lugar);
 			}
 		}
