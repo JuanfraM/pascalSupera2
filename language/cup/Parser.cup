@@ -49,15 +49,15 @@ terminal NEWLINE;
 terminal RAW_INPUT;
 
 non terminal ArrayList<Sentencia> program;
-non terminal ArrayList<Expresion> expression_list;
+non terminal ArrayList<Expresion> expression_list, key_datum_list;
 non terminal Sentencia statment,simple_stmt,compound_stmt,if_stmt,for_stmt,while_stmt,return_stmt;
 non terminal ArrayList<Sentencia> suite, suite_statment;
 non terminal Variable  assignment_stmt;
-non terminal Expresion list_display,atom, literal, power, primary;
+non terminal Expresion list_display,atom, literal, power, primary, dict_display;
 non terminal Expresion u_expr,m_expr,a_expr;
 non terminal Expresion shift_expr,and_expr,xor_expr,or_expr;
 non terminal Expresion or_test,and_test,not_test, comparison;
-non terminal Expresion expression,expression_stmt,enclosure,parenth_form;
+non terminal Expresion expression,expression_stmt,enclosure,parenth_form, key_datum;
 non terminal FuncionesPredefinidas print_stmt,raw_input,func_predef;
 non terminal FuncionDef funcdef;
 non terminal FuncionCall call;
@@ -221,6 +221,7 @@ atom ::= literal:l {: RESULT = l;:}
 
 enclosure ::=   list_display:l {:RESULT = l;:}
               | parenth_form:p {:RESULT = p;:}
+			  | dict_display:d {:RESULT = d;:}
               ;
 
 parenth_form ::= LPAREN expression_list:el COMA RPAREN {: RESULT = new Expresion("TUPLA",el,TipoExpresion.TUPLA,elleft+1,elright+1);:}
@@ -234,7 +235,27 @@ parenth_form ::= LPAREN expression_list:el COMA RPAREN {: RESULT = new Expresion
 
 list_display ::= LCORCHETE expression_list:el RCORCHETE {:RESULT = new Expresion("LIST",el,TipoExpresion.LIST,elleft+1,elright+1);:}
                 ;
+				
+dict_display ::= LLLAVE:l  key_datum_list:kdl RLLAVE {: RESULT = new Expresion ("DICT", kdl, TipoExpresion.DICT, lleft+1, lright+1); :}
+				;
 
+key_datum_list ::= key_datum_list:kdl COMA key_datum:kd {: 
+															kdl.add(kd);
+															RESULT = kdl;
+														:}
+					|key_datum:kd 	{: 	
+										ArrayList<Expresion> kdl = new ArrayList<Expresion>();
+										kdl.add(kd) ;
+										RESULT = kdl;
+									:}
+				;
+				
+key_datum ::= STRING:s DOSPUNTOS:d expression:e {: 
+													Expresion es = new Expresion(s,TipoExpresion.STRING,sleft+1,sright+1);
+													RESULT = new Expresion("DATA_DICT",es,e,TipoExpresion.DATA_DICT,dleft+1,dright+1); 
+												:}
+			;		
+				
 expression_list ::=   expression:e {: ArrayList<Expresion> a = new ArrayList<Expresion>();
                     a.add(e) ;
                     RESULT = a;:}

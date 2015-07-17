@@ -75,6 +75,14 @@ public class Expresion extends Sentencia {
 		else if (this.tipo == TipoExpresion.LONG ){
 			ret = new Resultado(this.value.toString().replaceAll("[lL]", ""), TipoResultado.LONG);
 		}
+		else if (this.tipo == TipoExpresion.DATA_DICT ){
+			Resultado arg1 = this.arguments.get(0).ejecutar(variables, Funciones, loop);
+			Resultado arg2 = this.arguments.get(1).ejecutar(variables, Funciones, loop);
+			ArrayList<Resultado> valores = new ArrayList<Resultado>();
+			valores.add(arg1);
+			valores.add(arg2);
+			ret = new Resultado (valores, TipoResultado.DATA_DICT);
+		}
 		else if(this.tipo == TipoExpresion.ID){
 			
 			
@@ -88,15 +96,17 @@ public class Expresion extends Sentencia {
 		}
 		
 		
-		else if(this.tipo == TipoExpresion.LIST || this.tipo == TipoExpresion.TUPLA){
+		else if(this.tipo == TipoExpresion.LIST || this.tipo == TipoExpresion.TUPLA || this.tipo == TipoExpresion.DICT){
 			ArrayList<Resultado> arg = new ArrayList<Resultado>();
 			for (Expresion a : this.arguments){
 				arg.add(a.ejecutar(variables, Funciones, loop));
 			}
 			if (this.tipo == TipoExpresion.LIST)
 				ret = new Resultado(arg, TipoResultado.LIST);
-			else 
+			else if (this.tipo == TipoExpresion.TUPLA)
 				ret = new Resultado(arg, TipoResultado.TUPLA);
+			else 
+				ret = new Resultado(arg, TipoResultado.DICT);
 		}
 		
 		//UNARIAS

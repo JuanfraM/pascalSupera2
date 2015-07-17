@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 public class Resultado {
 	
+	//CUANDO ES DICC GUARDA UNA LISTA DE DATA_DICT
+	//CUANDO ES DATA_DICT GUARDA EN EL PRIMER ELEMENTO DEL this.valores(0) la key y en this.valores(1) el valor
+	
+	
 	private String valor;
 	private TipoResultado tipo;
 	private ArrayList<Resultado> valores;
@@ -89,6 +93,27 @@ public class Resultado {
 	        }
 	        aux = aux.substring(0, aux.length()-2);
 	        String respuesta = '(' + aux + ')';
+	        
+	        return respuesta;
+		}
+		else if (this.tipo == TipoResultado.DICT){
+	        String aux = "";
+	        for ( Resultado r : this.valores) {
+        		aux = aux + r.toString() + ", ";
+	        }
+	        aux = aux.substring(0, aux.length()-2);
+	        String respuesta = '{' + aux + '}';
+	        
+	        return respuesta;
+		}
+		else if (this.tipo == TipoResultado.DATA_DICT){
+	        String respuesta = "";
+	        
+	        respuesta = respuesta + "\"" + this.valores.get(0).toString() + "\" : ";
+	        if(this.valores.get(1).getTipo() == TipoResultado.STRING)
+	        	respuesta = respuesta + "\"" + this.valores.get(1).toString() + "\"" ;
+            else
+            	respuesta = respuesta + this.valores.get(1).toString() ;
 	        
 	        return respuesta;
 		}
