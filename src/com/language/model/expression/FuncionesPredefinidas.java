@@ -97,10 +97,16 @@ public class FuncionesPredefinidas extends Expresion {
 		// cuenta las ocurrencias del elemento pasado en la lista
 		else if (this.value == "count"){
 			Resultado variable = variables.get(this.id_variable.toString());
+			if(this.arguments.size()!=1)
+				throw new ParsingException(ParsingException.FUNC_PREDEF_COUNT1+this.lugar);
+			
+			Expresion e = (Expresion)this.arguments.get(0);
+			Resultado elemento = e.ejecutar(variables, Funciones, loop);	
+			
 			if(variable.getTipo()==TipoResultado.STRING){	
-				Expresion e = (Expresion)this.arguments.get(0);
-				Resultado aux = e.ejecutar(variables, Funciones, loop);			
-				String subcadena = aux.getValor().toString();
+				if(elemento.getTipo()!=TipoResultado.STRING)
+					throw new ParsingException(ParsingException.FUNC_PREDEF_COUNT2+this.lugar);
+				String subcadena = elemento.getValor().toString();
 				String v = variable.getValor();
 				Pattern pattern = Pattern.compile(subcadena);
 				Matcher matcher = pattern.matcher(v);
@@ -113,8 +119,7 @@ public class FuncionesPredefinidas extends Expresion {
 			}
 			else if(variable.getTipo()==TipoResultado.LIST)
 			{
-				Expresion e = (Expresion)this.arguments.get(0);
-				Resultado elemento = e.ejecutar(variables, Funciones, loop);	
+				elemento = e.ejecutar(variables, Funciones, loop);	
 				ArrayList<Resultado> lista= variable.getValores();
 				int count = 0;
 				for(Resultado r: lista){
@@ -128,6 +133,79 @@ public class FuncionesPredefinidas extends Expresion {
 				throw new ParsingException(ParsingException.FUNC_PREDEF_COUNT+this.lugar);
 			}
 		}
+		//localiza la subcadena en el string pasado
+		// localiza la subcadena en el string pasado a partir de una direccion
+		else if (this.value == "find"){
+				Resultado v = variables.get(this.id_variable.toString());
+				if(v.getTipo()!=TipoResultado.STRING)
+					throw new ParsingException(ParsingException.FUNC_PREDEF_FIND1+this.lugar);					
+				
+				String variable = v.getValor();
+				
+				//s.find(substring)
+				if(this.arguments.size()==1){
+					Expresion e = (Expresion)this.arguments.get(0);
+					Resultado elemento = e.ejecutar(variables, Funciones, loop);
+					if(elemento.getTipo()!=TipoResultado.STRING)
+						throw new ParsingException(ParsingException.FUNC_PREDEF_FIND2+this.lugar);
+					
+					String subcadena = elemento.getValor();
+					int index = variable.indexOf(subcadena);
+					ret = new Resultado(Integer.toString(index),TipoResultado.INTEGER);
+				}//s.find(substring,start)								
+				else if(this.arguments.size()==2){
+					//substring
+					Expresion e = (Expresion)this.arguments.get(0);
+					Resultado elemento = e.ejecutar(variables, Funciones, loop);
+					if(elemento.getTipo()!=TipoResultado.STRING)
+						throw new ParsingException(ParsingException.FUNC_PREDEF_FIND2+this.lugar);
+					
+					String subcadena = elemento.getValor();
+					
+					//start
+					Expresion e1 = (Expresion)this.arguments.get(1);
+					Resultado st = e1.ejecutar(variables, Funciones, loop);
+					if(st.getTipo()!=TipoResultado.INTEGER)
+						throw new ParsingException(ParsingException.FUNC_PREDEF_FIND3+this.lugar);
+					
+					int start = Integer.valueOf(st.getValor());
+					
+					int index = variable.indexOf(subcadena,start);
+					ret = new Resultado(Integer.toString(index),TipoResultado.INTEGER);
+				}				
+				else { 
+					throw new ParsingException(ParsingException.FUNC_PREDEF_FIND+this.lugar);
+				}
+			}		
+				// devuelve una lista de cadenas, resultado de separar la cadena con el separador ingresado
+				else if (this.value == "split"){
+						Resultado v = variables.get(this.id_variable.toString());
+						if(v.getTipo()!=TipoResultado.STRING)
+							throw new ParsingException(ParsingException.FUNC_PREDEF_FIND1+this.lugar);					
+						
+						String variable = v.getValor();
+						
+						//s.find(substring)
+						if(this.arguments.size()==1){
+							Expresion e = (Expresion)this.arguments.get(0);
+							Resultado elemento = e.ejecutar(variables, Funciones, loop);
+							if(elemento.getTipo()!=TipoResultado.STRING)
+								throw new ParsingException(ParsingException.FUNC_PREDEF_SPLIT1+this.lugar);
+							
+							String subcadena = elemento.getValor();
+							String[] lista= variable.split(subcadena);
+							ArrayList<Resultado> l = new ArrayList<Resultado>();
+							Resultado aux;
+							for(int i=0;i< lista.length;i++){
+								aux= new Resultado(lista[i],TipoResultado.STRING);
+								l.add(aux);
+							}
+							ret = new Resultado(l,TipoResultado.LIST);
+						}			
+						else { 
+							throw new ParsingException(ParsingException.FUNC_PREDEF_SPLIT2+this.lugar);
+						}
+					}
 
 		return ret;
 	}
