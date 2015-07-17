@@ -28,7 +28,7 @@ public class Return extends Sentencia {
 	
 	public Resultado ejecutar(Scope variables, Map<String, FuncionDef> Funciones, boolean loop) {
 		if (this.arguments.isEmpty())
-			return new Resultado ("None", TipoResultado.NONE);
+			return new Resultado ();
 		if (this.arguments.size() == 1)
 			return this.arguments.get(0).ejecutar(variables, Funciones, loop);
 		ArrayList <Resultado> a = new ArrayList <Resultado>();

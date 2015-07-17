@@ -61,6 +61,7 @@ non terminal Expresion expression,expression_stmt,enclosure,parenth_form;
 non terminal FuncionesPredefinidas print_stmt,raw_input,func_predef;
 non terminal FuncionDef funcdef;
 non terminal FuncionCall call;
+non terminal ArrayList<String> assignment_ids;
 
 precedence left OPAMAS, OPAMENOS;
 
@@ -80,15 +81,15 @@ compound_stmt ::=   if_stmt:i {: RESULT = i; :}
                   ;
                                                   
 for_stmt ::=  FOR ID:id IN expression_list:el DOSPUNTOS suite:s {:
-                                              Expresion e = el.get(0);
-                                              if((e.getTipo()!=TipoExpresion.LIST)&&(e.getTipo()!=TipoExpresion.ID))
-                                                throw new ParsingException(ParsingException.ERROR_FOR1);
-                                              if(e.getTipo()==TipoExpresion.LIST){
-                                                if(e.getArguments().size()<2)
-                                                  throw new ParsingException(ParsingException.ERROR_FOR2);
-                                              }
-                                               RESULT = new For(id,el,s,elleft+1,elright+1);:}
-                                              }
+																  Expresion e = el.get(0);
+																  if((e.getTipo()!=TipoExpresion.LIST)&&(e.getTipo()!=TipoExpresion.ID))
+																	throw new ParsingException(ParsingException.ERROR_FOR1);
+																  if(e.getTipo()==TipoExpresion.LIST){
+																	if(e.getArguments().size()<2)
+																	  throw new ParsingException(ParsingException.ERROR_FOR2);
+																  }
+																   RESULT = new For(id,el,s,elleft+1,elright+1);
+															   :}
             ;
 
 //originalmente era expression_list
@@ -122,9 +123,20 @@ return_stmt ::= RETURN:r {: RESULT = new Return (rleft+1,rright+1); :}
 				;
 
 //Originalmente era expression_list
-assignment_stmt ::=   ID:i ASIG:a expression:e {: RESULT = new Variable(i,e); :}
-                    | ID:i ASIG:a raw_input:r {: RESULT = new Variable(i,r); :}
+assignment_stmt ::=   assignment_ids:i ASIG:a expression:e {: RESULT = new Variable (i,e, aleft+1, aright+1); :}
+                    | assignment_ids:i ASIG:a raw_input:r {: RESULT = new Variable (i,r, aleft+1, aright+1); :}
                     ;
+					
+assignment_ids ::= ID:i {: 
+							ArrayList<String> ai = new ArrayList<String>();
+							ai.add(i.toString());
+							RESULT = ai;
+						:} 
+					| assignment_ids:ai COMA ID:i 	{:
+														ai.add(i.toString());
+														RESULT = ai;
+													:}
+					;
 
 //Originalmente era expression_list
 expression_stmt ::=  expression:el {: RESULT = el;:}

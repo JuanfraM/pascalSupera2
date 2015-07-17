@@ -70,17 +70,25 @@ public class FuncionCall extends Expresion {
 					i++;
 				}
 				
+				//Ejecuto sentencias
 				ret = Ejecutar.ejecutar(sentencias, variables, funciones, false);
 				
+				//Borro el scope de la funcion
 				Map<String,Resultado> scopeViejo = variables.removeScope();
+				
+				//Acutalizo las variables pasadas por referencia
 				for (String s : variablesRef.keySet()){
 					Resultado valorRef = scopeViejo.get(s);
 					String variableRef = variablesRef.get(s);
 					if (variables.containsKeyScopeLocal(variableRef))
 						variables.replaceScopeLocal(variableRef, valorRef);
 				}
+				
+				//Si la funcion no tenia especificado un return devuelvo un None
 				if (ret == null)
 					return new Resultado("None", TipoResultado.NONE);
+				
+				//En caso contrario devuelvo el valor correspondiente
 				return ret;
 				
 				

@@ -16,12 +16,7 @@ public class Ejecutar {
 
 			//Asignacion de variables
 			if (stmt instanceof Variable){
-				if (Variables.containsKeyScopeLocal(stmt.getValor())){
-					Variables.replaceScopeLocal(stmt.getValor(), stmt.ejecutar(Variables, Funciones, loop));
-				}
-				else {
-					Variables.putScopeLocal(stmt.getValor(), stmt.ejecutar(Variables, Funciones, loop));
-				}
+				stmt.ejecutar(Variables, Funciones, loop);
 			}
 			
 			//Funciones predefinidas
