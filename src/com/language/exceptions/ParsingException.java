@@ -11,6 +11,7 @@ public class ParsingException extends RuntimeException {
 	public static final String FUNC_PREDEF_LENGTH = "error al invocar la funcion length;";
 	public static final String FUNC_PREDEF_COUNT1 = "error al invocar la funcion count,debe tener un parametro;";
 	public static final String FUNC_PREDEF_COUNT2 = "error al invocar la funcion count,debe ingresar un string como parametro;";
+	public static final String ASIGNACION_ARGUMENTOS = "la cantidad de argumentos para la asignacion no es correcta";
 
 	public ParsingException(String message, Throwable cause) {
 		super(message, cause);
