@@ -24,7 +24,15 @@ public class ParsingException extends RuntimeException {
 	public static final String FUNC_PREDEF_STR = "error en la conversion de tipo a string";
 	public static final String FUNC_PREDEF_INT1 = "error en la conversion de tipo a int, debe ingresar un strig con valor entero";
 	public static final String FUNC_PREDEF_INT2 = "error en la conversion de tipo a int";
-	
+	public static final String FUNC_PREDEF_GET1 = "la funcion debe aplicarse a un diccionario, una lista o una tupla";
+	public static final String FUNC_PREDEF_GET2 = "los argumentos deben ser de tipo int";
+	public static final String FUNC_PREDEF_GET3 = "el valor de fin debe ser mayor al valor de inicio";
+	public static final String FUNC_PREDEF_GET4 = "fuera de rango";
+	public static final String FUNC_PREDEF_GET5 = "cantidad de argumentos invalida";
+	public static final String FUNC_PREDEF_GET6 = "los argumentos deben ser de tipo string";
+	public static final String FUNC_PREDEF_SET1 = "la funcion debe aplicarse a un diccionario o una lista";
+	public static final String FUNC_PREDEF_SET2 = "cantidad de argumentos invalida";
+	public static final String FUNC_PREDEF_SET3 = "tipo de argumento invalido";
 	
 	
 	public ParsingException(String message, Throwable cause) {

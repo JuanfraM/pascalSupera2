@@ -190,6 +190,8 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 													salto = false;
 												}
 											}
+										
+	{LineTerminator}/{Comment}			{ return symbol(sym.NEWLINE); }
 
 	{Comment}        	{ /* ignore */ }
 

@@ -65,6 +65,17 @@ public class FuncionesPredefinidas extends Expresion {
 		this.lugar = " en la linea "+linea+" y columna "+col;
 	}
 
+	public FuncionesPredefinidas(Object value, ArrayList<Expresion> arg, int linea, int col){
+		super(value, TipoExpresion.FUNCTION_PREDEF, linea, col);
+		this.value = value;
+		this.linea = linea;
+		this.col = col;
+		if (arg == null)
+			this.arguments = new ArrayList<Expresion>();
+		this.arguments = arg;
+		this.lugar = " en la linea "+linea+" y columna "+col;
+	}
+	
 	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> Funciones, boolean loop)throws ParsingException {
 		Resultado ret = new Resultado();
 		
@@ -232,7 +243,9 @@ public class FuncionesPredefinidas extends Expresion {
 			else{
 				throw new ParsingException(ParsingException.FUNC_PREDEF_LENGTH+this.lugar);
 			}
-		}//cuenta las ocurrencias de la subcadena en el string pasado o
+		}
+		
+		//cuenta las ocurrencias de la subcadena en el string pasado o
 		// cuenta las ocurrencias del elemento pasado en la lista
 		else if (this.value == "count"){
 			Resultado variable = variables.get(this.id_variable.toString());
@@ -364,6 +377,7 @@ public class FuncionesPredefinidas extends Expresion {
 					int index = Integer.parseInt(elemento.getValor());
 					v.getValores().remove(index);
 				}
+				//Es diccionario
 				else {
 					
 				}
@@ -372,6 +386,155 @@ public class FuncionesPredefinidas extends Expresion {
 			}			
 			else { 
 				throw new ParsingException(ParsingException.FUNC_PREDEF_SPLIT2+this.lugar);
+			}
+		}
+		
+		//GET obtiene el elemento de una lista 
+		else if(this.value=="get"){
+			Resultado var = this.arguments.get(0).ejecutar(variables, Funciones, loop);
+			if (var.getTipo() == TipoResultado.LIST || var.getTipo() == TipoResultado.TUPLA){
+				if (this.arguments.size() == 2){
+					Resultado arg = this.arguments.get(1).ejecutar(variables, Funciones, loop);
+					if (arg.getTipo() != TipoResultado.INTEGER && arg.getTipo() != TipoResultado.NONE )
+						throw new ParsingException(ParsingException.FUNC_PREDEF_GET2+this.lugar);
+					
+					if (arg.getTipo() == TipoResultado.NONE)
+						ret = var;
+					else{
+						int index = Integer.parseInt(arg.getValor());
+						int size = var.getValores().size();
+						
+						if (!(index < size))
+							throw new ParsingException(ParsingException.FUNC_PREDEF_GET4+this.lugar);
+						
+						if (index >= 0)
+							ret = var.getValores().get(index);
+						else
+							ret = var.getValores().get(size + index);
+					}
+					
+					
+				}
+				else if (this.arguments.size() == 3){
+					Resultado arg1 = this.arguments.get(1).ejecutar(variables, Funciones, loop);
+					Resultado arg2 = this.arguments.get(2).ejecutar(variables, Funciones, loop);
+					if (arg1.getTipo() != TipoResultado.INTEGER && arg1.getTipo() != TipoResultado.NONE ||
+						arg2.getTipo() != TipoResultado.INTEGER && arg2.getTipo() != TipoResultado.NONE	)
+						throw new ParsingException(ParsingException.FUNC_PREDEF_GET2+this.lugar);
+					
+					int inicio = 0;
+					int fin = var.getValores().size(); 
+					if (arg1.getTipo() == TipoResultado.INTEGER)
+						inicio = Integer.parseInt(arg1.getValor());
+					if (arg2.getTipo() == TipoResultado.INTEGER)
+						fin = Integer.parseInt(arg2.getValor());
+					
+					int size = var.getValores().size();
+					if (fin < 0 && fin < 0){
+						int finAux = size + fin;
+						int inicioAux = size + inicio;
+						inicio = finAux;
+						fin = inicioAux;
+					}
+						
+					if (!(fin <= size && inicio < size))
+						throw new ParsingException(ParsingException.FUNC_PREDEF_GET4+this.lugar);
+					
+					if (inicio > fin)
+						throw new ParsingException(ParsingException.FUNC_PREDEF_GET3+this.lugar);
+					
+					ArrayList<Resultado> retList = new ArrayList<Resultado>();
+					for (Resultado r : var.getValores().subList(inicio, fin)){
+						retList.add(r);
+					}
+					
+					ret = new Resultado(retList, var.getTipo());
+
+					
+				}
+				else {
+					Resultado arg1 = this.arguments.get(1).ejecutar(variables, Funciones, loop);
+					Resultado arg2 = this.arguments.get(2).ejecutar(variables, Funciones, loop);
+					Resultado arg3 = this.arguments.get(3).ejecutar(variables, Funciones, loop);
+					if (arg1.getTipo() != TipoResultado.INTEGER && arg1.getTipo() != TipoResultado.NONE ||
+						arg2.getTipo() != TipoResultado.INTEGER && arg2.getTipo() != TipoResultado.NONE	||
+						arg3.getTipo() != TipoResultado.INTEGER && arg3.getTipo() != TipoResultado.NONE)
+							throw new ParsingException(ParsingException.FUNC_PREDEF_GET2+this.lugar);
+					
+					int inicio = 0;
+					int fin = var.getValores().size(); 
+					int salto = 1;
+					if (arg1.getTipo() == TipoResultado.INTEGER)
+						inicio = Integer.parseInt(arg1.getValor());
+					if (arg2.getTipo() == TipoResultado.INTEGER)
+						fin = Integer.parseInt(arg2.getValor());
+					if (arg3.getTipo() == TipoResultado.INTEGER)
+						salto = Integer.parseInt(arg3.getValor());
+					
+					int size = var.getValores().size();
+					if (fin < 0 && fin < 0){
+						int finAux = size + fin;
+						int inicioAux = size + inicio;
+						inicio = finAux;
+						fin = inicioAux;
+					}
+					
+					if (!(fin <= size && inicio < size))
+						throw new ParsingException(ParsingException.FUNC_PREDEF_GET4+this.lugar);
+							
+					if (inicio > fin)
+						throw new ParsingException(ParsingException.FUNC_PREDEF_GET3+this.lugar);
+						
+					ArrayList<Resultado> retList = new ArrayList<Resultado>();
+					int contador = 1;
+					for(Resultado r : var.getValores().subList(inicio, fin)){
+						if (contador == salto){
+							contador = 0;
+							retList.add(r);
+						}
+						contador++;
+					}	
+					ret = new Resultado(retList, var.getTipo());
+					
+				}
+			}
+			else if (var.getTipo() == TipoResultado.DICT){
+				if (this.arguments.size() == 2){
+					Resultado arg = this.arguments.get(1).ejecutar(variables, Funciones, loop);
+					if (arg.getTipo() == TipoResultado.STRING){
+						for(Resultado r : var.getValores()){
+							if (r.getValores().get(0).equals(arg)){
+								ret = r.getValores().get(1);
+								break;
+							}
+						}	
+					}
+					else
+						throw new ParsingException(ParsingException.FUNC_PREDEF_GET6+this.lugar);
+				}
+				else 
+					throw new ParsingException(ParsingException.FUNC_PREDEF_GET5+this.lugar);
+			}
+			else{
+				throw new ParsingException(ParsingException.FUNC_PREDEF_GET1+this.lugar);
+			}
+		}
+		
+		else if(this.value=="set"){
+			if (this.arguments.size() != 2)
+				throw new ParsingException(ParsingException.FUNC_PREDEF_SET2+this.lugar);
+			Resultado var = this.arguments.get(0).ejecutar(variables, Funciones, loop);
+			Resultado arg = this.arguments.get(1).ejecutar(variables, Funciones, loop);
+			if (var.getTipo() == TipoResultado.LIST){
+				if (arg.getTipo() != TipoResultado.INTEGER)
+					throw new ParsingException(ParsingException.FUNC_PREDEF_SET3+this.lugar);
+			}
+			else if (var.getTipo() == TipoResultado.DICT){
+				if (arg.getTipo() != TipoResultado.STRING)
+					throw new ParsingException(ParsingException.FUNC_PREDEF_SET3+this.lugar);
+			}
+			else{
+				throw new ParsingException(ParsingException.FUNC_PREDEF_SET1+this.lugar);
 			}
 		}
 

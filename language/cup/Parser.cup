@@ -62,7 +62,7 @@ non terminal FuncionesPredefinidas print_stmt,raw_input,func_predef,func_type;
 non terminal FuncionDef funcdef;
 non terminal Expresion call;
 non terminal ArrayList<String> assignment_ids;
-non terminal val_corchete;
+non terminal Expresion val_corchete;
 
 precedence left OPAMAS, OPAMENOS;
 
@@ -126,7 +126,13 @@ return_stmt ::= RETURN:r {: RESULT = new Return (rleft+1,rright+1); :}
 //Originalmente era expression_list
 assignment_stmt ::=   assignment_ids:i ASIG:a expression:e {: RESULT = new Variable (i,e, aleft+1, aright+1); :}
                     | assignment_ids:i ASIG:a raw_input:r {: RESULT = new Variable (i,r, aleft+1, aright+1); :}
-					| ID LCORCHETE val_corchete RCORCHETE ASIG expression
+					| ID:i LCORCHETE val_corchete:v RCORCHETE ASIG expression 	{:
+																					ArrayList<Expresion> a = new ArrayList<Expresion>();
+																					Expresion id = new Expresion(i,TipoExpresion.ID,ileft+1,iright+1);
+																					a.add(id);
+																					a.add(v);
+																					RESULT = new FuncionesPredefinidas("set",a,ileft+1,iright+1);
+																				:}
                     ;
 					
 assignment_ids ::= ID:i {: 
@@ -309,13 +315,34 @@ call ::=  ID:id parenth_form:p 	{:
 										RESULT = new FuncionCall(id,p,idleft+1,idright+1);
 								:}
         | FUNCION:f parenth_form:p {:RESULT = new FuncionesPredefinidas(f,p,fleft+1,fright+1);:}
-		| ID LCORCHETE val_corchete RCORCHETE
-		| ID LCORCHETE val_corchete DOSPUNTOS val_corchete RCORCHETE
-		| ID LCORCHETE val_corchete DOSPUNTOS val_corchete DOSPUNTOS val_corchete RCORCHETE
+		| ID:i LCORCHETE val_corchete:v RCORCHETE 	{: 
+														ArrayList<Expresion> a = new ArrayList<Expresion>();
+														Expresion id = new Expresion(i,TipoExpresion.ID,ileft+1,iright+1);
+														a.add(id);
+														a.add(v);
+														RESULT = new FuncionesPredefinidas("get",a,ileft+1,iright+1); 
+													:}
+		| ID:i LCORCHETE val_corchete:v1 DOSPUNTOS val_corchete:v2 RCORCHETE 	{: 
+																					ArrayList<Expresion> a = new ArrayList<Expresion>();
+																					Expresion id = new Expresion(i,TipoExpresion.ID,ileft+1,iright+1);
+																					a.add(id);
+																					a.add(v1);
+																					a.add(v2);
+																					RESULT = new FuncionesPredefinidas("get",a,ileft+1,iright+1); 
+																				:}
+		| ID:i LCORCHETE val_corchete:v1 DOSPUNTOS val_corchete:v2 DOSPUNTOS val_corchete:v3 RCORCHETE 	{: 
+																											ArrayList<Expresion> a = new ArrayList<Expresion>();
+																											Expresion id = new Expresion(i,TipoExpresion.ID,ileft+1,iright+1);
+																											a.add(id);
+																											a.add(v1);
+																											a.add(v2);
+																											a.add(v3);
+																											RESULT = new FuncionesPredefinidas("get",a,ileft+1,iright+1); 
+																										:}
         ;
 		
-val_corchete ::= expression
-				|
+val_corchete ::= expression:e {: RESULT = e; :}
+				| {: RESULT = new Expresion("None",TipoExpresion.NONE,0,0); :}
 				
 			;
 

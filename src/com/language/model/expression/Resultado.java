@@ -76,7 +76,8 @@ public class Resultado {
 	            else
 	                aux = aux + r.toString() + ", ";
 	        }
-	        aux = aux.substring(0, aux.length()-2);
+	        if (!this.valores.isEmpty())
+	        	aux = aux.substring(0, aux.length()-2);
 	        String respuesta = '[' + aux + ']';
 	        
 	        return respuesta;
@@ -91,7 +92,8 @@ public class Resultado {
 	            else
 	                aux = aux + r.toString() + ", ";
 	        }
-	        aux = aux.substring(0, aux.length()-2);
+	        if (!this.valores.isEmpty())
+	        	aux = aux.substring(0, aux.length()-2);
 	        String respuesta = '(' + aux + ')';
 	        
 	        return respuesta;
@@ -101,7 +103,8 @@ public class Resultado {
 	        for ( Resultado r : this.valores) {
         		aux = aux + r.toString() + ", ";
 	        }
-	        aux = aux.substring(0, aux.length()-2);
+	        if (!this.valores.isEmpty())
+	        	aux = aux.substring(0, aux.length()-2);
 	        String respuesta = '{' + aux + '}';
 	        
 	        return respuesta;
