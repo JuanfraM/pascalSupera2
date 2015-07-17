@@ -18,7 +18,7 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			
-			FileInputStream file = new FileInputStream("E:\\codigo.py");//args[0]);
+			FileInputStream file = new FileInputStream("/home/juanfra/workspace/pascalSupera2/test");//args[0]);
 			ArrayList<Sentencia> Sentencias = ExpressionParser.parse(file);
 			if (Sentencias.isEmpty())
 				return;
