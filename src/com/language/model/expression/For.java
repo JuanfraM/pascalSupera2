@@ -12,12 +12,17 @@ public class For extends Sentencia{
 	private Object iterador; 
 	private ArrayList<Expresion> lista;
 	private ArrayList<Sentencia> sentencias;
+	private int linea, columna;
+	private String lugar;
 	
-	public For(Object iterador, ArrayList<Expresion> lista,ArrayList<Sentencia> sentencias) {
+	public For(Object iterador, ArrayList<Expresion> lista,ArrayList<Sentencia> sentencias, int linea, int col) {
 		super();
 		this.iterador = iterador;
 		this.lista = lista;
 		this.sentencias = sentencias;
+		this.linea = linea;
+		this.columna = col;
+		this.lugar = " en la linea "+linea+" y columna "+col;
 		
 	}
 	
@@ -55,7 +60,7 @@ public class For extends Sentencia{
 		else if(e.getTipo()== TipoExpresion.ID) {
 			Resultado variable = variables.get(e.getValor());
 			if (variable.getTipo()!= TipoResultado.LIST)
-				throw new ParsingException(ParsingException.ERROR_FOR1);
+				throw new ParsingException(ParsingException.ERROR_FOR1+this.lugar);
 			lista_iterar= variable.getValores();
 		}
 		

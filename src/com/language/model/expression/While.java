@@ -11,11 +11,15 @@ public class While extends Sentencia{
 	
 	private ArrayList<Sentencia> sentencias;
 	private Expresion condicion;
+	private int linea, columna;
+	private String lugar;
 	
-	public While( Expresion condicion, ArrayList<Sentencia> sentencias) {
+	public While( Expresion condicion, ArrayList<Sentencia> sentencias,int columna,int linea) {
 		super();
 		this.sentencias = sentencias;
 		this.condicion = condicion;
+		this.columna = columna;
+		this.lugar = " en la linea "+linea+" y columna "+columna;
 	}
 	
 	@Override
@@ -51,7 +55,7 @@ public class While extends Sentencia{
 				}
 			}
 			else 
-				throw new ParsingException(ParsingException.ERROR_WHILE);
+				throw new ParsingException(ParsingException.ERROR_WHILE+this.lugar);
 		}			
 			
 		return null;

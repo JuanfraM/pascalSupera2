@@ -46,6 +46,7 @@ terminal DEF,DATAFUNCION, FUNCION,RETURN,PRINT;
 terminal STRING, ID, INTEGER, LONG, FLOAT;
 terminal TAB, NOTAB;
 terminal NEWLINE;
+terminal RAW_INPUT;
 
 non terminal ArrayList<Sentencia> program;
 non terminal ArrayList<Expresion> expression_list;
@@ -57,7 +58,7 @@ non terminal Expresion u_expr,m_expr,a_expr;
 non terminal Expresion shift_expr,and_expr,xor_expr,or_expr;
 non terminal Expresion or_test,and_test,not_test, comparison;
 non terminal Expresion expression,expression_stmt,enclosure,parenth_form;
-non terminal FuncionesPredefinidas print_stmt;
+non terminal FuncionesPredefinidas print_stmt,raw_input;
 non terminal FuncionDef funcdef;
 non terminal FuncionCall call;
 
@@ -86,16 +87,16 @@ for_stmt ::=  FOR ID:id IN expression_list:el DOSPUNTOS suite:s {:
                                                 if(e.getArguments().size()<2)
                                                   throw new ParsingException(ParsingException.ERROR_FOR2);
                                               }
-                                               RESULT = new For(id,el,s);:}
+                                               RESULT = new For(id,el,s,elleft+1,elright+1);:}
                                               }
             ;
 
 //originalmente era expression_list
-while_stmt ::= WHILE expression:pe DOSPUNTOS suite:su {: RESULT = new While(pe,su);:}
+while_stmt ::= WHILE expression:pe DOSPUNTOS suite:su {: RESULT = new While(pe,su,peleft+1,peright+1);:}
               ;
 //originalmente era expression_list
-if_stmt ::=   IF expression:pe DOSPUNTOS suite:su {: RESULT = new If(pe,su);:}
-            | IF expression:pe DOSPUNTOS suite:su ELSE DOSPUNTOS suite:su2 {: RESULT = new If(pe,su,su2);:}
+if_stmt ::=   IF expression:pe DOSPUNTOS suite:su {: RESULT = new If(pe,su,peleft+1,peright+1);:}
+            | IF expression:pe DOSPUNTOS suite:su ELSE DOSPUNTOS suite:su2 {: RESULT = new If(pe,su,su2,peleft+1,peright+1);:}
             ;
 
 suite ::= NEWLINE TAB suite_statment:s NOTAB {: RESULT = s; :}
@@ -122,6 +123,7 @@ return_stmt ::= RETURN:r {: new Return (rleft+1,rright+1); :}
 
 //Originalmente era expression_list
 assignment_stmt ::=   ID:i ASIG:a expression:e {: RESULT = new Variable(i,e); :}
+                    | ID:i ASIG:a raw_input:r {: RESULT = new Variable(i,r); :}
                     ;
 
 //Originalmente era expression_list
@@ -237,6 +239,10 @@ literal ::=   STRING: s {:RESULT = new Expresion(s,TipoExpresion.STRING,sleft+1,
 
 print_stmt ::= PRINT expression:e {:RESULT = new FuncionesPredefinidas("print", e, eleft+1,eright+1);:}
                 ;
+
+raw_input ::=   RAW_INPUT LPAREN literal:l  RPAREN  {:RESULT = new FuncionesPredefinidas("raw_input", l, lleft+1,lright+1);:}
+              | RAW_INPUT:r LPAREN   RPAREN  {:RESULT = new FuncionesPredefinidas("raw_input", rleft+1,rright+1);:}
+              ;
 
 funcdef ::= DEF ID:id LPAREN expression_list:el RPAREN DOSPUNTOS suite:s {:
                         for (Expresion e: el){
