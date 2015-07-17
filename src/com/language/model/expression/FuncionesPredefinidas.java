@@ -13,7 +13,7 @@ public class FuncionesPredefinidas extends Expresion {
 	
 	private Object value; 
 	private Object id_variable;
-	private ArrayList<Sentencia> arguments;
+	private ArrayList<Expresion> arguments;
 	private int linea, col;
 	public String lugar;
 	
@@ -26,33 +26,40 @@ public class FuncionesPredefinidas extends Expresion {
 		this.lugar = " en la linea "+linea+" y columna "+columna;
 	}
 	
-	public FuncionesPredefinidas(Object value,Object id_variable ,Sentencia arg, int linea, int col){
+	public FuncionesPredefinidas(Object value,Object id_variable ,Expresion arg, int linea, int col){
 		super(value, TipoExpresion.FUNCTION_PREDEF, linea, col);
 		this.value = value;
 		this.linea = linea;
 		this.id_variable = id_variable;
 		this.col = col;
-		this.arguments = new ArrayList<Sentencia>();
-		this.arguments.add(arg);
+		if(arg==null){
+			this.arguments = new ArrayList<Expresion>();
+		}
+		else if(arg!=null && arg.getArguments()==null){
+			this.arguments = new ArrayList<Expresion>();
+			this.arguments.add(arg);
+		}
+		else
+			this.arguments = arg.getArguments();
 		this.lugar = " en la linea "+linea+" y columna "+col;
 	}
 	
-	public FuncionesPredefinidas(Object value, Sentencia arg, int linea, int col){
+	public FuncionesPredefinidas(Object value, Expresion arg, int linea, int col){
 		super(value, TipoExpresion.FUNCTION_PREDEF, linea, col);
 		this.value = value;
 		this.linea = linea;
 		this.col = col;
-		this.arguments = new ArrayList<Sentencia>();
+		this.arguments = new ArrayList<Expresion>();
 		this.arguments.add(arg);
 		this.lugar = " en la linea "+linea+" y columna "+col;
 	}
 	
-	public FuncionesPredefinidas(Object value, Sentencia arg1, Sentencia arg2, int linea, int col){
+	public FuncionesPredefinidas(Object value, Expresion arg1, Expresion arg2, int linea, int col){
 		super(value, TipoExpresion.FUNCTION_PREDEF, linea, col);
 		this.value = value;
 		this.linea = linea;
 		this.col = col;
-		this.arguments = new ArrayList<Sentencia>();
+		this.arguments = new ArrayList<Expresion>();
 		this.arguments.add(arg1);
 		this.arguments.add(arg2);
 		this.lugar = " en la linea "+linea+" y columna "+col;
@@ -79,12 +86,12 @@ public class FuncionesPredefinidas extends Expresion {
 		}
 		else if(this.value=="length"){
 			Resultado variable = variables.get(this.id_variable.toString());
-			if(variable.getTipo()==TipoResultado.STRING){	
+			if((variable.getTipo()==TipoResultado.STRING)&&this.arguments.size()==0){	
 				String largo = Integer.toString(variable.getValor().length());				
 				ret = new Resultado(largo,TipoResultado.INTEGER);
 			}
 			else{
-				
+				throw new ParsingException(ParsingException.FUNC_PREDEF_LENGTH+this.lugar);
 			}
 		}//cuenta las ocurrencias de la subcadena en el string pasado o
 		// cuenta las ocurrencias del elemento pasado en la lista
@@ -118,7 +125,7 @@ public class FuncionesPredefinidas extends Expresion {
 				ret = new Resultado(largo,TipoResultado.INTEGER);
 			}
 			else { 
-				throw new ParsingException(ParsingException.ERROR_FUNC_PREDEF1+this.lugar);
+				throw new ParsingException(ParsingException.FUNC_PREDEF_COUNT+this.lugar);
 			}
 		}
 
