@@ -15,7 +15,7 @@ public class FuncionCall extends Expresion {
 	private int linea, col;
 	
 	public FuncionCall(Object value, ArrayList<Expresion> arguments,  int linea, int col) {
-		super(value, arguments, TipoExpresion.FUNCION, col, col);
+		super(value, arguments, TipoExpresion.FUNCION, col, col); 
 		this.value = value;
 		this.parametros = arguments;
 		this.linea=linea;
