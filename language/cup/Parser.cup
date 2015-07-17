@@ -196,7 +196,7 @@ power ::=   primary: p {: RESULT = p; :}
           ;
 
 primary ::=   atom:a {: RESULT = a; :}
-            | call
+            | call:c {: RESULT = c; :}
             ;
 
 atom ::= literal:l {: RESULT = l;:}

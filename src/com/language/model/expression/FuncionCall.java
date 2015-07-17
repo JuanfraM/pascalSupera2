@@ -8,13 +8,14 @@ import com.language.Ejecutar;
 import com.language.Scope;
 import com.language.exceptions.ParsingException;
 
-public class FuncionCall extends Sentencia {
+public class FuncionCall extends Expresion {
 
 	private Object value; 
 	private ArrayList<Expresion> parametros;
 	private int linea, col;
 	
 	public FuncionCall(Object value, ArrayList<Expresion> arguments,  int linea, int col) {
+		super(value, arguments, TipoExpresion.FUNCION, col, col);
 		this.value = value;
 		this.parametros = arguments;
 		this.linea=linea;
@@ -56,7 +57,8 @@ public class FuncionCall extends Sentencia {
 					}
 					
 					//Agrego las variables al scope
-					variables.putScopeLocal(parametrosDef.get(i), r);		
+					variables.putScopeLocal(parametrosDef.get(i), r);
+					i++;
 				}
 				
 				ret = Ejecutar.ejecutar(sentencias, variables, funciones, false);

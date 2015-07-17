@@ -15,5 +15,6 @@ public enum TipoExpresion {
 	FUNCTION_PREDEF,
 	BREAK,
 	RETURN,
-	CONTINUE
+	CONTINUE,
+	FUNCION
 }
