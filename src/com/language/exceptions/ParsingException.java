@@ -7,8 +7,8 @@ public class ParsingException extends RuntimeException {
 	public static final String ERROR_FOR1 = "debes ingresar una lista";
 	public static final String ERROR_FOR2 = "debes ingresar una lista con mas de un elemento";
 	public static final String ERROR_WHILE = "la condicion debe ser booleana";
-	public static final String ERROR_FUNC_PREDEF1 = "no hay una funcion predefinida para este tipo de variable";
-	
+	public static final String FUNC_PREDEF_COUNT = "no hay una funcion predefinida para este tipo de variable";
+	public static final String FUNC_PREDEF_LENGTH = "error al invocar la funcion length";
 
 	public ParsingException(String message, Throwable cause) {
 		super(message, cause);

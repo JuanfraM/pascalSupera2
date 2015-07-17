@@ -8,6 +8,12 @@ public class Resultado {
 	private TipoResultado tipo;
 	private ArrayList<Resultado> valores;
 	
+	public Resultado(){
+		this.valor = "None";
+		this.tipo = TipoResultado.NONE;
+		this.valores = null;
+	}
+	
 	public Resultado (String valor, TipoResultado tipo){
 		this.valor = valor;
 		this.tipo = tipo;
