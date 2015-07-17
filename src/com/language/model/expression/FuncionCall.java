@@ -8,13 +8,23 @@ import com.language.Ejecutar;
 import com.language.Scope;
 import com.language.exceptions.ParsingException;
 
-public class FuncionCall extends Sentencia {
+public class FuncionCall extends Expresion {
 
 	private Object value; 
 	private ArrayList<Expresion> parametros;
 	private int linea, col;
 	
+	public FuncionCall(Object value, Expresion argument,  int linea, int col) {
+		super(value, argument, TipoExpresion.FUNCION, col, col); 
+		this.value = value;
+		this.parametros = new ArrayList<Expresion>();
+		parametros.add(argument);
+		this.linea=linea;
+		this.col=col;
+	}
+	
 	public FuncionCall(Object value, ArrayList<Expresion> arguments,  int linea, int col) {
+		super(value, arguments, TipoExpresion.FUNCION, col, col); 
 		this.value = value;
 		this.parametros = arguments;
 		this.linea=linea;
@@ -56,7 +66,8 @@ public class FuncionCall extends Sentencia {
 					}
 					
 					//Agrego las variables al scope
-					variables.putScopeLocal(parametrosDef.get(i), r);		
+					variables.putScopeLocal(parametrosDef.get(i), r);
+					i++;
 				}
 				
 				ret = Ejecutar.ejecutar(sentencias, variables, funciones, false);
@@ -68,7 +79,8 @@ public class FuncionCall extends Sentencia {
 					if (variables.containsKeyScopeLocal(variableRef))
 						variables.replaceScopeLocal(variableRef, valorRef);
 				}
-				
+				if (ret == null)
+					return new Resultado("None", TipoResultado.NONE);
 				return ret;
 				
 				
@@ -78,7 +90,7 @@ public class FuncionCall extends Sentencia {
 			
 		}
 		else 
-			throw new ParsingException("La funcion " + this.value.toString() + "no esta denfida en la posicion" + this.linea + " " + this.col);
+			throw new ParsingException("La funcion " + this.value.toString() + " no esta denfida en la posicion " + this.linea + " " + this.col);
 
 	}
 

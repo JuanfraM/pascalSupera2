@@ -198,8 +198,12 @@ power ::=   primary: p {: RESULT = p; :}
           ;
 
 primary ::=   atom:a {: RESULT = a; :}
+<<<<<<< HEAD
             | call
             | func_predef:fp {: RESULT = fp; :}
+=======
+            | call:c {: RESULT = c; :}
+>>>>>>> branch 'master' of https://github.com/JuanfraM/pascalSupera2.git
             ;
 
 atom ::= literal:l {: RESULT = l;:}
@@ -264,8 +268,17 @@ funcdef ::= DEF ID:id LPAREN expression_list:el RPAREN DOSPUNTOS suite:s {:
                           RESULT = new FuncionDef(id, parametros, s);:}
              ;
 
+<<<<<<< HEAD
 call ::=  ID:id parenth_form:p {:RESULT = new FuncionCall(id,p.getArguments(),idleft+1,idright+1);:}
         ;
 
 func_predef ::= 	ID:id PUNTO DATAFUNCION:f parenth_form:pf {:RESULT = new FuncionesPredefinidas(f,id,pf,idleft+1,idright+1);:}
 				;
+=======
+call ::=  ID:id parenth_form:p 	{: 	if (p.getTipo() == TipoExpresion.TUPLA )
+										RESULT = new FuncionCall(id,p.getArguments(),idleft+1,idright+1);
+									else 
+										RESULT = new FuncionCall(id,p,idleft+1,idright+1);
+								:}
+        ;
+>>>>>>> branch 'master' of https://github.com/JuanfraM/pascalSupera2.git

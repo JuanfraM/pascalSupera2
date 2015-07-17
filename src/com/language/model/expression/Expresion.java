@@ -1,9 +1,11 @@
 package com.language.model.expression;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.language.Ejecutar;
 import com.language.Scope;
 import com.language.exceptions.ParsingException;
 
@@ -84,6 +86,7 @@ public class Expresion extends Sentencia {
 											" linea: " + this.linea + " columna: " + this.col );
 			}
 		}
+		
 		
 		else if(this.tipo == TipoExpresion.LIST || this.tipo == TipoExpresion.TUPLA){
 			ArrayList<Resultado> arg = new ArrayList<Resultado>();
