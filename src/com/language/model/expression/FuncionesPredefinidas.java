@@ -66,7 +66,7 @@ public class FuncionesPredefinidas extends Expresion {
 	}
 
 	public Resultado ejecutar(Scope variables, Map<String,FuncionDef> Funciones, boolean loop)throws ParsingException {
-		Resultado ret = null;
+		Resultado ret = new Resultado();
 		
 		if (this.value == "print"){
 			ret = new Resultado("True", TipoResultado.BOOL);
@@ -177,35 +177,63 @@ public class FuncionesPredefinidas extends Expresion {
 					throw new ParsingException(ParsingException.FUNC_PREDEF_FIND+this.lugar);
 				}
 			}		
-				// devuelve una lista de cadenas, resultado de separar la cadena con el separador ingresado
-				else if (this.value == "split"){
-						Resultado v = variables.get(this.id_variable.toString());
-						if(v.getTipo()!=TipoResultado.STRING)
-							throw new ParsingException(ParsingException.FUNC_PREDEF_FIND1+this.lugar);					
+			// devuelve una lista de cadenas, resultado de separar la cadena con el separador ingresado
+			else if (this.value == "split"){
+					Resultado v = variables.get(this.id_variable.toString());
+					if(v.getTipo()!=TipoResultado.STRING)
+						throw new ParsingException(ParsingException.FUNC_PREDEF_FIND1+this.lugar);					
+					
+					String variable = v.getValor();
+					
+					//s.find(substring)
+					if(this.arguments.size()==1){
+						Expresion e = (Expresion)this.arguments.get(0);
+						Resultado elemento = e.ejecutar(variables, Funciones, loop);
+						if(elemento.getTipo()!=TipoResultado.STRING)
+							throw new ParsingException(ParsingException.FUNC_PREDEF_SPLIT1+this.lugar);
 						
-						String variable = v.getValor();
-						
-						//s.find(substring)
-						if(this.arguments.size()==1){
-							Expresion e = (Expresion)this.arguments.get(0);
-							Resultado elemento = e.ejecutar(variables, Funciones, loop);
-							if(elemento.getTipo()!=TipoResultado.STRING)
-								throw new ParsingException(ParsingException.FUNC_PREDEF_SPLIT1+this.lugar);
-							
-							String subcadena = elemento.getValor();
-							String[] lista= variable.split(subcadena);
-							ArrayList<Resultado> l = new ArrayList<Resultado>();
-							Resultado aux;
-							for(int i=0;i< lista.length;i++){
-								aux= new Resultado(lista[i],TipoResultado.STRING);
-								l.add(aux);
-							}
-							ret = new Resultado(l,TipoResultado.LIST);
-						}			
-						else { 
-							throw new ParsingException(ParsingException.FUNC_PREDEF_SPLIT2+this.lugar);
+						String subcadena = elemento.getValor();
+						String[] lista= variable.split(subcadena);
+						ArrayList<Resultado> l = new ArrayList<Resultado>();
+						Resultado aux;
+						for(int i=0;i< lista.length;i++){
+							aux= new Resultado(lista[i],TipoResultado.STRING);
+							l.add(aux);
 						}
+						ret = new Resultado(l,TipoResultado.LIST);
+					}			
+					else { 
+						throw new ParsingException(ParsingException.FUNC_PREDEF_SPLIT2+this.lugar);
 					}
+				}
+					// quita el elemento de la lista o el diccionario
+					else if (this.value == "pop"){
+							Resultado v = variables.getScopeLocal(this.id_variable.toString());
+							if((v.getTipo()!=TipoResultado.LIST)&&(v.getTipo()!=TipoResultado.DICT))
+								throw new ParsingException(ParsingException.FUNC_PREDEF_POP1+this.lugar);	
+					
+							//s.pop(string)
+							if(this.arguments.size()==1){
+								Expresion e = (Expresion)this.arguments.get(0);
+								Resultado elemento = e.ejecutar(variables, Funciones, loop);
+								
+								Resultado variable;
+								if(v.getTipo()==TipoResultado.LIST){
+									if(elemento.getTipo()!=TipoResultado.INTEGER)
+										throw new ParsingException(ParsingException.FUNC_PREDEF_POP2+this.lugar);
+									
+									int index = Integer.parseInt(elemento.getValor());
+									v.getValores().remove(index);
+								}
+								else {
+									
+								}								
+							
+							}			
+							else { 
+								throw new ParsingException(ParsingException.FUNC_PREDEF_SPLIT2+this.lugar);
+							}
+						}
 
 		return ret;
 	}

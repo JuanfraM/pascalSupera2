@@ -18,6 +18,8 @@ public class ParsingException extends RuntimeException {
 	public static final String FUNC_PREDEF_FIND3 = "debe ingresar un entero como segundo parametro;";
 	public static final String FUNC_PREDEF_SPLIT1 = "debe ingresar un string como parametro;";
 	public static final String FUNC_PREDEF_SPLIT2 = "debe ingresar un parametro string;";
+	public static final String FUNC_PREDEF_POP1 = "la funcion debe aplicarse a un diccionario o una lista";
+	public static final String FUNC_PREDEF_POP2 = "debe ingresar un parametro entero";
 	
 	
 	public ParsingException(String message, Throwable cause) {
