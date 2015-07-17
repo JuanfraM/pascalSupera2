@@ -107,15 +107,13 @@ public class FuncionesPredefinidas extends Expresion {
 			else if(variable.getTipo()==TipoResultado.LIST)
 			{
 				Expresion e = (Expresion)this.arguments.get(0);
-				Resultado aux = e.ejecutar(variables, Funciones, loop);			
-				String elemento = aux.getValor().toString();
+				Resultado elemento = e.ejecutar(variables, Funciones, loop);	
 				ArrayList<Resultado> lista= variable.getValores();
 				int count = 0;
 				for(Resultado r: lista){
-					if (r.getValor().equals(elemento))
+					if (r.equals(elemento))
 						count++;
-				}
-				
+				}				
 				String largo = Integer.toString(count);
 				ret = new Resultado(largo,TipoResultado.INTEGER);
 			}

@@ -32,6 +32,31 @@ public class Resultado {
 		return this.tipo;
 	}
 	
+	public boolean equals(Resultado r){
+		if(((this.getTipo()==TipoResultado.INTEGER && r.getTipo()==TipoResultado.INTEGER))||
+				((this.getTipo()==TipoResultado.STRING && r.getTipo()==TipoResultado.STRING))||
+				((this.getTipo()==TipoResultado.LONG && r.getTipo()==TipoResultado.LONG))||
+				((this.getTipo()==TipoResultado.BOOL && r.getTipo()==TipoResultado.BOOL))){
+			if(this.getValor().equals(r.getValor()))
+				return true;
+			else
+				return false;
+		}
+		else if(((this.getTipo()==TipoResultado.LIST && r.getTipo()==TipoResultado.LIST))||
+				((this.getTipo()==TipoResultado.TUPLA && r.getTipo()==TipoResultado.TUPLA))){
+			ArrayList<Resultado> aux = r.getValores();
+			int i=0;
+			for(Resultado r1: this.valores){
+				if(!r1.equals(aux.get(i)))
+					return false;
+				i++;
+			}
+			return true;
+		}
+		else
+			return false;
+	}
+	
 	public String toString(){
 		if (this.tipo == TipoResultado.LIST){
 	        String aux = "";
