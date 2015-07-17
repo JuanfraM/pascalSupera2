@@ -62,6 +62,7 @@ non terminal FuncionesPredefinidas print_stmt,raw_input,func_predef,func_type;
 non terminal FuncionDef funcdef;
 non terminal Expresion call;
 non terminal ArrayList<String> assignment_ids;
+non terminal val_corchete;
 
 precedence left OPAMAS, OPAMENOS;
 
@@ -125,6 +126,7 @@ return_stmt ::= RETURN:r {: RESULT = new Return (rleft+1,rright+1); :}
 //Originalmente era expression_list
 assignment_stmt ::=   assignment_ids:i ASIG:a expression:e {: RESULT = new Variable (i,e, aleft+1, aright+1); :}
                     | assignment_ids:i ASIG:a raw_input:r {: RESULT = new Variable (i,r, aleft+1, aright+1); :}
+					| ID LCORCHETE val_corchete RCORCHETE ASIG expression
                     ;
 					
 assignment_ids ::= ID:i {: 
@@ -307,7 +309,15 @@ call ::=  ID:id parenth_form:p 	{:
 										RESULT = new FuncionCall(id,p,idleft+1,idright+1);
 								:}
         | FUNCION:f parenth_form:p {:RESULT = new FuncionesPredefinidas(f,p,fleft+1,fright+1);:}
+		| ID LCORCHETE val_corchete RCORCHETE
+		| ID LCORCHETE val_corchete DOSPUNTOS val_corchete RCORCHETE
+		| ID LCORCHETE val_corchete DOSPUNTOS val_corchete DOSPUNTOS val_corchete RCORCHETE
         ;
+		
+val_corchete ::= expression
+				|
+				
+			;
 
 func_type ::=   TYPE:t parenth_form:pf {:
                                     if(pf.getTipo()==TipoExpresion.TUPLA && pf.getArguments().size()==0)
