@@ -234,6 +234,82 @@ public class FuncionesPredefinidas extends Expresion {
 					
 			}
 		}
+		else if (this.value == "float"){			
+			
+			Expresion e = (Expresion) this.arguments.get(0);
+			Resultado aux = e.ejecutar(variables, Funciones, loop);
+			Float i;
+			String resultado;
+			switch (aux.getTipo()){
+			
+				case INTEGER:
+					resultado = aux.getValor();
+					Integer in = Integer.valueOf(resultado);
+					i = in.floatValue();
+					ret = new Resultado(i.toString(), TipoResultado.FLOAT);
+					break;
+				case FLOAT:
+					resultado = aux.getValor();
+					ret = new Resultado(resultado, TipoResultado.FLOAT);
+					break;
+				case LONG:
+					resultado = aux.getValor();
+					Long l = Long.valueOf(resultado);
+					i = l.floatValue();
+					ret = new Resultado(i.toString(), TipoResultado.INTEGER);
+					break;
+				case STRING:
+					resultado = aux.getValor();
+					try {
+						i = Float.valueOf(resultado);
+						ret = new Resultado(i.toString(), TipoResultado.FLOAT);
+					}
+					catch(NumberFormatException p){
+						throw new ParsingException(ParsingException.FUNC_PREDEF_INT1+this.lugar);
+					}
+					break;						
+				case BOOL:
+					resultado = aux.getValor();
+					if(resultado.equals("True"))
+						resultado = "1.0";
+					else
+						resultado="0.0";
+					ret = new Resultado(resultado, TipoResultado.FLOAT);
+					break;						
+				default:
+					throw new ParsingException(ParsingException.FUNC_PREDEF_INT2+this.lugar);
+					
+			}
+		}
+		else if (this.value == "tuple"){			
+			
+			Expresion e = (Expresion) this.arguments.get(0);
+			Resultado aux = e.ejecutar(variables, Funciones, loop);
+			ArrayList<Resultado> a = new ArrayList<Resultado>();
+			a.add(aux);
+			ret = new Resultado (a,TipoResultado.TUPLA);
+		}
+		else if (this.value == "list"){			
+			
+			Expresion e = (Expresion) this.arguments.get(0);
+			Resultado aux = e.ejecutar(variables, Funciones, loop);
+			ArrayList<Resultado> a = new ArrayList<Resultado>();
+			a.add(aux);
+			ret = new Resultado (a,TipoResultado.LIST);
+		}
+		else if (this.value == "dict"){			
+			
+			Expresion e = (Expresion) this.arguments.get(0);
+			Resultado aux = e.ejecutar(variables, Funciones, loop);
+			ArrayList<Resultado> a = new ArrayList<Resultado>();
+			a.add(new Resultado (aux.getValor(), TipoResultado.STRING));
+			a.add(aux);
+			Resultado retAux = new Resultado (a, TipoResultado.DATA_DICT);
+			a = new ArrayList<Resultado>();
+			a.add(retAux);
+			ret = new Resultado (a,TipoResultado.DICT);
+		}
+		
 		else if(this.value=="length"){
 			Resultado variable = variables.get(this.id_variable.toString());
 			if((variable.getTipo()==TipoResultado.STRING)&&this.arguments.size()==0){	

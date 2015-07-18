@@ -574,6 +574,10 @@ public class Expresion extends Sentencia {
 					Float b = Float.parseFloat(arg1.getValor()) + Float.parseFloat(arg2.getValor());
 					ret = new Resultado(b.toString(), TipoResultado.FLOAT);
 				}
+				else if (arg1.getTipo() == TipoResultado.STRING && arg2.getTipo() == TipoResultado.STRING){
+					String b = arg1.getValor() + arg2.getValor();
+					ret = new Resultado(b, TipoResultado.STRING);
+				}
 				else
 					throw new ParsingException("Tipo de datos no valido linea: " + this.linea + " columna: " + this.col );
 			}
