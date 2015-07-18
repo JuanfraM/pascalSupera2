@@ -1,6 +1,7 @@
 package com.language;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
 
@@ -46,11 +47,21 @@ public class Scope {
 	//SOBRE CUALQUIER SCOPE
 	
 	public void replace(String key, Resultado valor){
-		for (Map<String,Resultado> m : this.scope){
+		
+		Stack<Map<String,Resultado>> saux = new Stack<Map<String,Resultado>>();
+		boolean encontre = false;
+		
+		while (!encontre) {
+			Map<String, Resultado> m = this.scope.pop();
+			saux.push(m);
 			if (m.containsKey(key)){
+				encontre = true;
 				m.replace(key, valor);
-				return;
 			}
+		}
+		while (!saux.isEmpty()){
+			Map<String, Resultado> m = saux.pop();
+			this.scope.push(m);
 		}
 	}
 	
@@ -64,9 +75,21 @@ public class Scope {
 	
 	public Resultado get(String Key){
 		Resultado ret = null;
-		for (Map<String,Resultado> m : this.scope){
-			if (m.containsKey(Key))
-				return m.get(Key);
+		
+		Stack<Map<String,Resultado>> saux = new Stack<Map<String,Resultado>>();
+		boolean encontre = false;
+		
+		while (!encontre) {
+			Map<String, Resultado> m = this.scope.pop();
+			saux.push(m);
+			if (m.containsKey(Key)){
+				encontre = true;
+				ret = m.get(Key);
+			}
+		}
+		while (!saux.isEmpty()){
+			Map<String, Resultado> m = saux.pop();
+			this.scope.push(m);
 		}
 		return ret;
 	}
