@@ -92,7 +92,7 @@ public class FuncionesPredefinidas extends Expresion {
 	        String entrada = "";
 	        Scanner entradaEscaner = new Scanner (System.in); //Creación de un objeto Scanner
 	        entrada = entradaEscaner.nextLine (); //Invocamos un método sobre un objeto Scanner
-			entradaEscaner.close();
+//			entradaEscaner.close();
 			ret = new Resultado(entrada,TipoResultado.STRING);
 		}//devuelve el tipo de dato ingresado
 		else if (this.value == "type"){			
