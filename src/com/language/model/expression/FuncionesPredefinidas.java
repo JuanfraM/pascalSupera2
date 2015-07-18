@@ -645,7 +645,10 @@ public class FuncionesPredefinidas extends Expresion {
 		else if (this.value == "keys"){
 			Resultado v = variables.getScopeLocal(this.id_variable.toString());
 			if(v.getTipo()!=TipoResultado.DICT)
-				throw new ParsingException(ParsingException.FUNC_PREDEF_HAS_KEY1+this.lugar);	
+				throw new ParsingException(ParsingException.FUNC_PREDEF_HAS_KEY1+this.lugar);
+			
+			if(this.arguments.size()>0)
+				throw new ParsingException(ParsingException.FUNC_PREDEF_HAS_KEY2+this.lugar);
 			
 			ArrayList<Resultado> rList = new ArrayList<Resultado>();
 			
@@ -662,6 +665,9 @@ public class FuncionesPredefinidas extends Expresion {
 			if(v.getTipo()!=TipoResultado.DICT)
 				throw new ParsingException(ParsingException.FUNC_PREDEF_HAS_KEY1+this.lugar);	
 			
+			if(this.arguments.size()>0)
+				throw new ParsingException(ParsingException.FUNC_PREDEF_HAS_KEY2+this.lugar);
+			
 			ArrayList<Resultado> rList = new ArrayList<Resultado>();
 			
 			for (Resultado r : v.getValores()){
@@ -675,7 +681,10 @@ public class FuncionesPredefinidas extends Expresion {
 		else if (this.value == "items"){
 			Resultado v = variables.getScopeLocal(this.id_variable.toString());
 			if(v.getTipo()!=TipoResultado.DICT)
-				throw new ParsingException(ParsingException.FUNC_PREDEF_HAS_KEY1+this.lugar);	
+				throw new ParsingException(ParsingException.FUNC_PREDEF_HAS_KEY1+this.lugar);
+			
+			if(this.arguments.size()>0)
+				throw new ParsingException(ParsingException.FUNC_PREDEF_HAS_KEY2+this.lugar);
 			
 			ArrayList<Resultado> rList = new ArrayList<Resultado>();
 			
@@ -687,6 +696,20 @@ public class FuncionesPredefinidas extends Expresion {
 			}
 			
 			ret = new Resultado (rList,TipoResultado.LIST);
+
+		}
+		
+		else if (this.value == "size"){
+			Resultado v = variables.getScopeLocal(this.id_variable.toString());
+			if(v.getTipo()!=TipoResultado.LIST)
+				throw new ParsingException(ParsingException.FUNC_PREDEF_LIST+this.lugar);	
+			
+			if(this.arguments.size()>0)
+				throw new ParsingException(ParsingException.FUNC_PREDEF_HAS_KEY2+this.lugar);
+			
+			Integer size = v.getValores().size();
+			
+			ret = new Resultado (size.toString(),TipoResultado.INTEGER);
 
 		}
 

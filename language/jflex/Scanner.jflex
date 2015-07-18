@@ -37,13 +37,11 @@ import com.language.model.expression.*;
 
 %eofval{
         if (!salto){
-        	System.out.println("NEWLINE");
         	salto = true;
             return symbol(sym.NEWLINE);
         }
         if (tabsAnterior>0){
             tabsAnterior--;
-            System.out.println("NOTAB");
             return symbol(sym.NOTAB);
         }
         return symbol(sym.EOF);
@@ -67,85 +65,85 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 
 <YYINITIAL>{
 
-	"+" 				{ System.out.println("OPAMAS"); return symbol(sym.OPAMAS, "+"); }
-	"-" 				{ System.out.println("OPAMENOS"); return symbol(sym.OPAMENOS, "-"); }
-	"*" 				{ System.out.println("OPAPROD"); return symbol(sym.OPAPROD, "*"); }
-	"**" 				{ System.out.println("OPAEXP"); return symbol(sym.OPAEXP, "**"); }
-	"/" 				{ System.out.println("OPADIV"); return symbol(sym.OPADIV, "/"); }
-	"//" 				{ System.out.println("OPADIVENTERA"); return symbol(sym.OPADIVENTERA, "//"); }
-	"%" 				{ System.out.println("OPAMOD"); return symbol(sym.OPAMOD, "%"); }
+	"+" 				{ return symbol(sym.OPAMAS, "+"); }
+	"-" 				{ return symbol(sym.OPAMENOS, "-"); }
+	"*" 				{ return symbol(sym.OPAPROD, "*"); }
+	"**" 				{ return symbol(sym.OPAEXP, "**"); }
+	"/" 				{ return symbol(sym.OPADIV, "/"); }
+	"//" 				{ return symbol(sym.OPADIVENTERA, "//"); }
+	"%" 				{ return symbol(sym.OPAMOD, "%"); }
 
-	"&" 				{ System.out.println("OPBABDAND"); return symbol(sym.OPBABDAND, "&"); }
-	"|" 				{ System.out.println("OPBABOR"); return symbol(sym.OPBABOR, "|"); }
-	"^" 				{ System.out.println("OPBABXOR"); return symbol(sym.OPBABXOR, "^"); }
-	"~" 				{ System.out.println("OPBABNOT"); return symbol(sym.OPBABNOT, "~"); }
-	"<<" 				{ System.out.println("OPBABSHIFTL"); return symbol(sym.OPBABSHIFTL, "<<"); }
-	">>" 				{ System.out.println("OPBABSHIFTR"); return symbol(sym.OPBABSHIFTR, ">>"); }
+	"&" 				{ return symbol(sym.OPBABDAND, "&"); }
+	"|" 				{ return symbol(sym.OPBABOR, "|"); }
+	"^" 				{ return symbol(sym.OPBABXOR, "^"); }
+	"~" 				{ return symbol(sym.OPBABNOT, "~"); }
+	"<<" 				{ return symbol(sym.OPBABSHIFTL, "<<"); }
+	">>" 				{ return symbol(sym.OPBABSHIFTR, ">>"); }
 
-	"and" 				{ System.out.println("AND"); return symbol(sym.AND, "and"); }
-	"or" 				{ System.out.println("OR"); return symbol(sym.OR, "or"); }
-	"not" 				{ System.out.println("NOT"); return symbol(sym.NOT, "not"); }
-	"==" 				{ System.out.println("OPBIGUAL"); return symbol(sym.OPBIGUAL, "=="); }
-	"!=" 				{ System.out.println("OPBDISTINTO"); return symbol(sym.OPBDISTINTO, "!="); }
-	"<" 				{ System.out.println("OPBMENOR"); return symbol(sym.OPBMENOR, "<"); }
-	">" 				{ System.out.println("OPBMAYOR"); return symbol(sym.OPBMAYOR, ">"); }
-	"<=" 				{ System.out.println("OPBMENORIGUAL"); return symbol(sym.OPBMENORIGUAL, "<="); }
-	">=" 				{ System.out.println("OPBMAYORIGUAL"); return symbol(sym.OPBMAYORIGUAL, ">="); }
+	"and" 				{ return symbol(sym.AND, "and"); }
+	"or" 				{ return symbol(sym.OR, "or"); }
+	"not" 				{ return symbol(sym.NOT, "not"); }
+	"==" 				{ return symbol(sym.OPBIGUAL, "=="); }
+	"!=" 				{ return symbol(sym.OPBDISTINTO, "!="); }
+	"<" 				{ return symbol(sym.OPBMENOR, "<"); }
+	">" 				{ return symbol(sym.OPBMAYOR, ">"); }
+	"<=" 				{ return symbol(sym.OPBMENORIGUAL, "<="); }
+	">=" 				{ return symbol(sym.OPBMAYORIGUAL, ">="); }
 
-	"=" 				{ System.out.println("ASIG"); return symbol(sym.ASIG, "="); }
-	"["					{ System.out.println("LCORCHETE"); return symbol(sym.LCORCHETE, "["); }
-	"]"					{ System.out.println("RCORCHETE"); return symbol(sym.RCORCHETE, "]"); }
-	"{"					{ System.out.println("LLLAVE"); return symbol(sym.LLLAVE, "{"); }
-	"}"					{ System.out.println("RLLAVE"); return symbol(sym.RLLAVE, "}"); }
-	"(" 				{ System.out.println("LPAREN"); return symbol(sym.LPAREN, "("); }
-	")" 				{ System.out.println("RPAREN"); return symbol(sym.RPAREN, ")"); }
-	"."					{ System.out.println("PUNTO"); return symbol(sym.PUNTO, "."); }
-	","					{ System.out.println("COMA"); return symbol(sym.COMA, ","); }
-	";"					{ System.out.println("PUNTOYCOMA"); return symbol(sym.PUNTOYCOMA, ";"); }
-	":"					{ System.out.println("DOSPUNTOS"); return symbol(sym.DOSPUNTOS, ":"); }
+	"=" 				{ return symbol(sym.ASIG, "="); }
+	"["					{ return symbol(sym.LCORCHETE, "["); }
+	"]"					{ return symbol(sym.RCORCHETE, "]"); }
+	"{"					{ return symbol(sym.LLLAVE, "{"); }
+	"}"					{ return symbol(sym.RLLAVE, "}"); }
+	"(" 				{ return symbol(sym.LPAREN, "("); }
+	")" 				{ return symbol(sym.RPAREN, ")"); }
+	"."					{ return symbol(sym.PUNTO, "."); }
+	","					{ return symbol(sym.COMA, ","); }
+	";"					{ return symbol(sym.PUNTOYCOMA, ";"); }
+	":"					{ return symbol(sym.DOSPUNTOS, ":"); }
 
-	True				{ System.out.println("TRUE"); return symbol(sym.TRUE , "True" ); }
-	False				{ System.out.println("FALSE"); return symbol(sym.FALSE, "False"); }
-	None				{ System.out.println("FALSE"); return symbol(sym.NONE, "None"); }
+	True				{ return symbol(sym.TRUE , "True" ); }
+	False				{ return symbol(sym.FALSE, "False"); }
+	None				{ return symbol(sym.NONE, "None"); }
 
-	if					{ System.out.println("IF"); return symbol(sym.IF, "if"); }
-	else				{ System.out.println("ELSE"); return symbol(sym.ELSE, "else"); }
-	while				{ System.out.println("WHILE"); return symbol(sym.WHILE, "while"); }
-	break				{ System.out.println("BREAK"); return symbol(sym.BREAK, "break"); }
-	continue			{ System.out.println("CONTINUE"); return symbol(sym.CONTINUE, "continue"); }
-	return				{ System.out.println("RETURN"); return symbol(sym.RETURN, "return"); }
-	for					{ System.out.println("FOR"); return symbol(sym.FOR, "for"); }
-	def					{ System.out.println("DEF"); return symbol(sym.DEF, "def"); }
-	in					{ System.out.println("IN"); return symbol(sym.IN, "in"); }
+	if					{ return symbol(sym.IF, "if"); }
+	else				{ return symbol(sym.ELSE, "else"); }
+	while				{ return symbol(sym.WHILE, "while"); }
+	break				{ return symbol(sym.BREAK, "break"); }
+	continue			{ return symbol(sym.CONTINUE, "continue"); }
+	return				{ return symbol(sym.RETURN, "return"); }
+	for					{ return symbol(sym.FOR, "for"); }
+	def					{ return symbol(sym.DEF, "def"); }
+	in					{ return symbol(sym.IN, "in"); }
 
-	has_key				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "has_key"); }
-	items				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "items"); }
-	keys				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "keys"); }
-	pop					{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "pop"); }
-	values				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "values"); }
-	count				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "count"); }
-	find				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "find"); }
-	join				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "join"); }
-	split				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "split"); }
-	replace				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "replace"); }
-	length				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "length"); }
-	append				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "append"); }
-	extend				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "extend"); }
-	index				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "index"); }
-	insert				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "insert"); }
-	size				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "size"); }
+	has_key				{ return symbol(sym.DATAFUNCION, "has_key"); }
+	items				{ return symbol(sym.DATAFUNCION, "items"); }
+	keys				{ return symbol(sym.DATAFUNCION, "keys"); }
+	pop					{ return symbol(sym.DATAFUNCION, "pop"); }
+	values				{ return symbol(sym.DATAFUNCION, "values"); }
+	count				{ return symbol(sym.DATAFUNCION, "count"); }
+	find				{ return symbol(sym.DATAFUNCION, "find"); }
+	join				{ return symbol(sym.DATAFUNCION, "join"); }
+	split				{ return symbol(sym.DATAFUNCION, "split"); }
+	replace				{ return symbol(sym.DATAFUNCION, "replace"); }
+	length				{ return symbol(sym.DATAFUNCION, "length"); }
+	append				{ return symbol(sym.DATAFUNCION, "append"); }
+	extend				{ return symbol(sym.DATAFUNCION, "extend"); }
+	index				{ return symbol(sym.DATAFUNCION, "index"); }
+	insert				{ return symbol(sym.DATAFUNCION, "insert"); }
+	size				{ return symbol(sym.DATAFUNCION, "size"); }
 
-	print				{ System.out.println("FUNCION"); return symbol(sym.PRINT, "print"); }
-	raw_input			{ System.out.println("RAW_INPUT"); return symbol(sym.RAW_INPUT, "raw_input"); }
-	type				{ System.out.println("TYPE"); return symbol(sym.TYPE, "type"); }
-	int					{ System.out.println("FUNCION"); return symbol(sym.FUNCION, "int"); }
-	float				{ System.out.println("FUNCION"); return symbol(sym.FUNCION, "float"); }
-	str					{ System.out.println("FUNCION"); return symbol(sym.FUNCION, "str"); }
-	tuple				{ System.out.println("FUNCION"); return symbol(sym.FUNCION, "tuple"); }
-	list				{ System.out.println("FUNCION"); return symbol(sym.FUNCION, "list"); }
-	dict				{ System.out.println("FUNCION"); return symbol(sym.FUNCION, "dict"); }
+	print				{ return symbol(sym.PRINT, "print"); }
+	raw_input			{ return symbol(sym.RAW_INPUT, "raw_input"); }
+	type				{ return symbol(sym.TYPE, "type"); }
+	int					{ return symbol(sym.FUNCION, "int"); }
+	float				{ return symbol(sym.FUNCION, "float"); }
+	str					{ return symbol(sym.FUNCION, "str"); }
+	tuple				{ return symbol(sym.FUNCION, "tuple"); }
+	list				{ return symbol(sym.FUNCION, "list"); }
+	dict				{ return symbol(sym.FUNCION, "dict"); }
 
-	{Identifier}		{ System.out.println("ID: " + yytext()); return symbol(sym.ID, yytext()); }
+	{Identifier}		{ return symbol(sym.ID, yytext()); }
 
 	\"                 	{ string.setLength(0); yybegin(STRING); }
 
@@ -155,15 +153,14 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 
 	\'\'\'              { string.setLength(0); yybegin(MLCSSTRING); }
 
-	{IntegerLiteral}	{ System.out.println("INTEGER: " + yytext()); return symbol(sym.INTEGER, yytext()); }
+	{IntegerLiteral}	{ return symbol(sym.INTEGER, yytext()); }
 
-	{LongLiteral}		{ System.out.println("LONG: " + yytext()); return symbol(sym.LONG, yytext()); }
+	{LongLiteral}		{ return symbol(sym.LONG, yytext()); }
 
-	{FloatLiteral} 		{ System.out.println("FLOAT: " + yytext()); return symbol(sym.FLOAT, yytext()); }
+	{FloatLiteral} 		{ return symbol(sym.FLOAT, yytext()); }
 
 	{LineTerminator}/[\t]					{ 	tabs = 0; 
 												yybegin(TAB); 
-												System.out.println("NEWLINE"); 
 												return symbol(sym.NEWLINE);
 											}
 
@@ -172,18 +169,15 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 												if (!salto){
 													yypushback(1);
 													salto = true;	
-													System.out.println("NEWLINE"); 
 													return symbol(sym.NEWLINE);
 												}
 												if (tabs < tabsAnterior) {
 													yypushback(1);
 													tabsAnterior--;
-													System.out.println("NOTAB"); 
 													return symbol(sym.NOTAB);
 												}
 												else if (tabs > tabsAnterior){
 													tabsAnterior = tabs;
-													System.out.println("TAB"); 
 													return symbol(sym.TAB);
 												}
 												else {
@@ -203,7 +197,7 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 
 	\"                	{
 							yybegin(YYINITIAL);
-							System.out.println("STRING: "  + string.toString()); return symbol(sym.STRING, string.toString());
+							return symbol(sym.STRING, string.toString());
 						}
 
 	[^\n\r\"\\]+       	{ string.append( yytext() ); }
@@ -224,7 +218,7 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 
 	\'                	{
 							yybegin(YYINITIAL);
-							System.out.println("STRING: "  + string.toString()); return symbol(sym.STRING, string.toString());
+							return symbol(sym.STRING, string.toString());
 						}
 
 	[^\n\r\'\\]+       	{ string.append( yytext() ); }
@@ -244,7 +238,7 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 <MLSTRING>{
 	\"\"\"              {
 							yybegin(YYINITIAL);
-							System.out.println("STRING: "  + string.toString()); return symbol(sym.STRING, string.toString());
+							return symbol(sym.STRING, string.toString());
 						}
 
 	[^\n\r\"\\]+       	{ string.append( yytext() ); }
@@ -263,7 +257,7 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 <MLCSSTRING>{
 	\'\'\'              {
 							yybegin(YYINITIAL);
-							System.out.println("STRING: "  + string.toString()); return symbol(sym.STRING, string.toString());
+							return symbol(sym.STRING, string.toString());
 						}
 
 	[^\n\r\'\\]+       	{ string.append( yytext() ); }
@@ -289,12 +283,11 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 										if (tabs < tabsAnterior) {
 											yypushback(1);
 											tabsAnterior--;
-											System.out.println("NOTAB"); 
 											return symbol(sym.NOTAB);
 										}
 										else if (tabs > tabsAnterior){
 											tabsAnterior = tabs;
-											System.out.println("TAB"); return symbol(sym.TAB);
+											return symbol(sym.TAB);
 										}
 									}
 

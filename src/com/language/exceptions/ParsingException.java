@@ -36,6 +36,7 @@ public class ParsingException extends RuntimeException {
 	public static final String FUNC_PREDEF_HAS_KEY1 = "la funcion debe aplicarse a un diccionario";
 	public static final String FUNC_PREDEF_HAS_KEY2 = "cantidad de parametros incorrecta";
 	public static final String FUNC_PREDEF_HAS_KEY3 = "el argumento debe ser de tipo string";
+	public static final String FUNC_PREDEF_LIST = "la funcion debe aplicarse a una lista";
 	
 	
 	public ParsingException(String message, Throwable cause) {
