@@ -455,7 +455,21 @@ public class FuncionesPredefinidas extends Expresion {
 				}
 				//Es diccionario
 				else {
+					if(elemento.getTipo()!=TipoResultado.STRING)
+						throw new ParsingException(ParsingException.FUNC_PREDEF_POP2+this.lugar);
 					
+					String index = elemento.getValor();
+					int i = 0;
+					boolean encontre = false;
+					for (Resultado r : v.getValores()){
+						if (r.getValores().get(0).getValor().equals(index)){
+							encontre = true;
+							break;
+						}
+						i++;
+					}
+					if (encontre)
+						v.getValores().remove(i);
 				}
 				ret = new Resultado();
 			
@@ -594,6 +608,86 @@ public class FuncionesPredefinidas extends Expresion {
 			else{
 				throw new ParsingException(ParsingException.FUNC_PREDEF_GET1+this.lugar);
 			}
+		}
+		
+		else if (this.value == "has_key"){
+			Resultado v = variables.getScopeLocal(this.id_variable.toString());
+			if(v.getTipo()!=TipoResultado.DICT)
+				throw new ParsingException(ParsingException.FUNC_PREDEF_HAS_KEY1+this.lugar);	
+	
+			//s.pop(string)
+			if(this.arguments.size()==1){
+				Expresion e = (Expresion)this.arguments.get(0);
+				Resultado elemento = e.ejecutar(variables, Funciones, loop);
+				
+				
+				if(elemento.getTipo()!=TipoResultado.STRING)
+					throw new ParsingException(ParsingException.FUNC_PREDEF_HAS_KEY3+this.lugar);
+				
+				String index = elemento.getValor();
+				boolean encontre = false;
+				for (Resultado r : v.getValores()){
+					if (r.getValores().get(0).getValor().equals(index)){
+						encontre = true;
+						break;
+					}
+				}
+				if (encontre)
+					ret = new Resultado ("True", TipoResultado.BOOL);
+				else
+					ret = new Resultado ("False", TipoResultado.BOOL);
+			}			
+			else { 
+				throw new ParsingException(ParsingException.FUNC_PREDEF_HAS_KEY2+this.lugar);
+			}
+		}
+		
+		else if (this.value == "keys"){
+			Resultado v = variables.getScopeLocal(this.id_variable.toString());
+			if(v.getTipo()!=TipoResultado.DICT)
+				throw new ParsingException(ParsingException.FUNC_PREDEF_HAS_KEY1+this.lugar);	
+			
+			ArrayList<Resultado> rList = new ArrayList<Resultado>();
+			
+			for (Resultado r : v.getValores()){
+				rList.add(new Resultado(r.getValores().get(0).getValor(),r.getValores().get(0).getTipo()));
+			}
+			
+			ret = new Resultado (rList,TipoResultado.LIST);
+
+		}
+		
+		else if (this.value == "values"){
+			Resultado v = variables.getScopeLocal(this.id_variable.toString());
+			if(v.getTipo()!=TipoResultado.DICT)
+				throw new ParsingException(ParsingException.FUNC_PREDEF_HAS_KEY1+this.lugar);	
+			
+			ArrayList<Resultado> rList = new ArrayList<Resultado>();
+			
+			for (Resultado r : v.getValores()){
+				rList.add(new Resultado(r.getValores().get(1).getValor(),r.getValores().get(1).getTipo()));
+			}
+			
+			ret = new Resultado (rList,TipoResultado.LIST);
+
+		}
+		
+		else if (this.value == "items"){
+			Resultado v = variables.getScopeLocal(this.id_variable.toString());
+			if(v.getTipo()!=TipoResultado.DICT)
+				throw new ParsingException(ParsingException.FUNC_PREDEF_HAS_KEY1+this.lugar);	
+			
+			ArrayList<Resultado> rList = new ArrayList<Resultado>();
+			
+			for (Resultado r : v.getValores()){
+				ArrayList <Resultado> rTupla = new ArrayList<Resultado>();
+				rTupla.add(new Resultado(r.getValores().get(0).getValor(),r.getValores().get(0).getTipo()));
+				rTupla.add(new Resultado(r.getValores().get(1).getValor(),r.getValores().get(1).getTipo()));
+				rList.add(new Resultado (rTupla,TipoResultado.TUPLA));
+			}
+			
+			ret = new Resultado (rList,TipoResultado.LIST);
+
 		}
 
 		return ret;

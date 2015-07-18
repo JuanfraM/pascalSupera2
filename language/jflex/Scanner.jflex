@@ -122,7 +122,7 @@ FloatLiteral = (0 | [1-9][0-9]*)\.[0-9]+
 	items				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "items"); }
 	keys				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "keys"); }
 	pop					{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "pop"); }
-	values				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "has_key"); }
+	values				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "values"); }
 	count				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "count"); }
 	find				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "find"); }
 	join				{ System.out.println("DATAFUNCION"); return symbol(sym.DATAFUNCION, "join"); }
