@@ -421,7 +421,7 @@ public class Expresion extends Sentencia {
 					ret = new Resultado(b.toString(), TipoResultado.BOOL);
 				}
 				else if (arg1.getTipo() == TipoResultado.STRING && arg2.getTipo() == TipoResultado.STRING){
-					Boolean b = arg1.getValor() == arg2.getValor();
+					Boolean b = arg1.getValor().equals(arg2.getValor());
 					ret = new Resultado(b.toString(), TipoResultado.BOOL);
 				}		
 				else if (arg1.getTipo() == TipoResultado.BOOL && arg2.getTipo() == TipoResultado.BOOL){
